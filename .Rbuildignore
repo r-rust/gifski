@@ -1,0 +1,9 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^src/myrustlib/target
+\.rs\.bk$
+^readme.md$
+^.travis.yml$
+^appveyor.yml$
+\.png$
+\.gif$
