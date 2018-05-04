@@ -7,7 +7,7 @@
   for efficient cross-frame palettes and temporal dithering. It produces animated GIFs that
   use thousands of colors per frame.
   
-This R package wraps the [gifski](https://crates.io/crates/gifski) cargo crate.
+This R package wraps the [gifski](https://crates.io/crates/gifski) cargo crate, see also the [website](https://gif.ski/).
   
 ## Examples
 
