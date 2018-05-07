@@ -13,9 +13,7 @@ install:
   - C:\rustup-init.exe -y --default-host x86_64-pc-windows-gnu
   - set PATH=%PATH%;C:\Users\appveyor\.cargo\bin
   - rustup target add i686-pc-windows-gnu
-  - copy src\cargo\config C:\Users\appveyor\.cargo\
   - C:\Rtools\mingw_32\bin\ar cru c:\Rtools\mingw_32\lib\gcc\i686-w64-mingw32\4.9.3\libgcc_eh.a
-  - C:\Rtools\mingw_64\bin\ar cru c:\Rtools\mingw_64\lib\gcc\x86_64-w64-mingw32\4.9.3\libgcc_eh.a
   - rustc -V
   - cargo -V
 
