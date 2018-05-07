@@ -5,9 +5,11 @@ PKG_LIBS = -L$(LIBDIR) -lmyrustlib -lws2_32 -ladvapi32 -luserenv -ldbghelp
 
 # These can also be set in ~/.cargo/config
 export CARGO_TARGET_I686_PC_WINDOWS_GNU_LINKER=$(CC)
-export CARGO_TARGET_I686_PC_WINDOWS_GNU_RUSTFLAGS=-C panic=abort
 export CC=$(CC)
 export AR=$(AR)
+
+# This bypasses the exception stuff
+#export CARGO_TARGET_I686_PC_WINDOWS_GNU_RUSTFLAGS=-C panic=abort
 
 all: clean
 
