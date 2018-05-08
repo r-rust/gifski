@@ -1,3 +1,0 @@
-[target.i686-pc-windows-gnu]
-linker = "C:/Rtools/mingw_32/bin/gcc"
-rustflags = "-C panic=abort"
