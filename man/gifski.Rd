@@ -5,7 +5,7 @@
 \title{Gifski}
 \usage{
 gifski(png_files, gif_file = "animation.gif", width = 480, height = 480,
-  delay = 1, loop = TRUE)
+  delay = 1, loop = TRUE, progress = TRUE)
 }
 \arguments{
 \item{png_files}{vector of png files}
@@ -19,11 +19,13 @@ gifski(png_files, gif_file = "animation.gif", width = 480, height = 480,
 \item{delay}{time to show each image in seconds}
 
 \item{loop}{should the gif play forever (FALSE to only play once)}
+
+\item{progress}{show progress bar}
 }
 \description{
 Gifski converts video frames to GIF animations using pngquant's fancy features
-for efficient cross-frame palettes and temporal dithering. It produces animated GIFs that
-use thousands of colors per frame.
+for efficient cross-frame palettes and temporal dithering. It produces animated
+GIFs that use thousands of colors per frame.
 }
 \examples{
 png("frame\%03d.png")

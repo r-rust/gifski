@@ -13,6 +13,7 @@
 #' @param height gif height in pixel
 #' @param delay time to show each image in seconds
 #' @param loop should the gif play forever (FALSE to only play once)
+#' @param progress show progress bar
 #' @examples
 #' png("frame%03d.png")
 #' par(ask = FALSE)
