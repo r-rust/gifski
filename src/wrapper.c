@@ -63,7 +63,7 @@ SEXP R_png_to_gif(SEXP png_files, SEXP gif_file, SEXP width, SEXP height, SEXP d
 
 // Standard R package stuff
 static const R_CallMethodDef CallEntries[] = {
-  {"R_png_to_gif", (DL_FUNC) &R_png_to_gif, 6},
+  {"R_png_to_gif", (DL_FUNC) &R_png_to_gif, 7},
   {NULL, NULL, 0}
 };
 
