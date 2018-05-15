@@ -24,7 +24,7 @@
 #' unlink(png_files)
 #' utils::browseURL(gif_file)
 gifski <- function(png_files, gif_file = 'animation.gif', width = 480, height = 480, delay = 1, loop = TRUE, progress = TRUE){
-  stopifnot(is.character(png_files))
+  png_files <- normalizePath(png_files, mustWork = TRUE)
   stopifnot(is.character(gif_file))
   width <- as.integer(width)
   height <- as.integer(height)
