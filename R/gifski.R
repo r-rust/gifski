@@ -23,12 +23,13 @@
 #' gif_file <- gifski(png_files)
 #' unlink(png_files)
 #' utils::browseURL(gif_file)
-gifski <- function(png_files, gif_file = 'animation.gif', width = 480, height = 480, delay = 1, loop = TRUE){
+gifski <- function(png_files, gif_file = 'animation.gif', width = 480, height = 480, delay = 1, loop = TRUE, progress = TRUE){
   stopifnot(is.character(png_files))
   stopifnot(is.character(gif_file))
   width <- as.integer(width)
   height <- as.integer(height)
   delay <- as.integer(delay / 100)
   loop <- as.logical(loop)
-  .Call(R_png_to_gif, png_files, gif_file, width, height, delay, loop)
+  progress <- as.logical(progress)
+  .Call(R_png_to_gif, png_files, gif_file, width, height, delay, loop, progress)
 }

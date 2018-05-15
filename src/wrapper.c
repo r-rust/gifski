@@ -20,7 +20,7 @@ void * gifski_encoder_thread(void * data){
   return NULL;
 }
 
-SEXP R_png_to_gif(SEXP png_files, SEXP gif_file, SEXP width, SEXP height, SEXP delay, SEXP loop){
+SEXP R_png_to_gif(SEXP png_files, SEXP gif_file, SEXP width, SEXP height, SEXP delay, SEXP loop, SEXP progress){
   if(!Rf_isString(png_files))
     Rf_error("png_files must be character vector");
 
@@ -44,10 +44,16 @@ SEXP R_png_to_gif(SEXP png_files, SEXP gif_file, SEXP width, SEXP height, SEXP d
   for(size_t i = 0; i < Rf_length(png_files); i++){
     if(gifski_add_frame_png_file(g, i, CHAR(STRING_ELT(png_files, i)), Rf_asInteger(delay)) != GIFSKI_OK)
       Rprintf("Failed to add frame %d\n", i);
+    if(Rf_asLogical(progress))
+      Rprintf("\rFrame %d (%d%%)", i, (i+1) * 100 / Rf_length(png_files));
   }
 
   /* This will finalize the encoder thread as well */
+  if(Rf_asLogical(progress))
+    Rprintf("\nFinalizing encoding...");
   gifski_end_adding_frames(g);
+  if(Rf_asLogical(progress))
+    Rprintf(" done!\n");
 
   /* wait for the encoder thread to finish */
   if(pthread_join(encoder_thread, NULL))
