@@ -1,7 +1,7 @@
 #' Gifski
 #'
-#' Gifski converts video frames to high quality GIF animations. Either provide your own
-#' png files, or automatically save animated graphics from the R graphics device.
+#' Gifski converts image frames to high quality GIF animations. Either provide input
+#' png files, or automatically render animated graphics from the R graphics device.
 #'
 #' @export
 #' @rdname gifski
@@ -40,6 +40,7 @@ gifski <- function(png_files, gif_file = 'animation.gif', width = 480, height = 
 #' @rdname gifski
 #' @param expr an R expression that creates graphics
 #' @param res passed to \link{png}
+#' @param bg passed to \link{png}
 #' @examples
 #' # Example borrowed from gganimate
 #' library(gapminder)
@@ -53,14 +54,15 @@ gifski <- function(png_files, gif_file = 'animation.gif', width = 480, height = 
 #'     print(p)
 #'   })
 #' }
-#' gif_file <- save_gif(makeplot(), 'gapminder.gif')
+#' gif_file <- save_gif(makeplot(), 'gapminder.gif', width = )
 #' \donttest{utils::browseURL(gif_file)}
-save_gif <- function(expr, gif_file = 'animation.gif', width = 1280, height = 720, res = 144, delay = 1, loop = TRUE, progress = TRUE){
+save_gif <- function(expr, gif_file = 'animation.gif', width = 1280, height = 720, res = 144,
+                     bg = "transparent", delay = 1, loop = TRUE, progress = TRUE){
   imgdir <- tempfile('tmppng')
   dir.create(imgdir)
   on.exit(unlink(imgdir, recursive = TRUE))
   filename <- file.path(imgdir, "tmpimg_%05d.png")
-  grDevices::png(filename, width = width, height = height, res = res, type = 'cairo')
+  grDevices::png(filename, width = width, height = height, res = res, bg = bg, type = 'cairo')
   eval(expr)
   grDevices::dev.off()
   images <- list.files(imgdir, pattern = 'tmpimg_\\d{5}.png', full.names = TRUE)

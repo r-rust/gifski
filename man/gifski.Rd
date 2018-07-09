@@ -9,7 +9,8 @@ gifski(png_files, gif_file = "animation.gif", width = 480, height = 480,
   delay = 1, loop = TRUE, progress = TRUE)
 
 save_gif(expr, gif_file = "animation.gif", width = 1280, height = 720,
-  res = 144, delay = 1, loop = TRUE, progress = TRUE)
+  res = 144, bg = "transparent", delay = 1, loop = TRUE,
+  progress = TRUE)
 }
 \arguments{
 \item{png_files}{vector of png files}
@@ -29,10 +30,12 @@ save_gif(expr, gif_file = "animation.gif", width = 1280, height = 720,
 \item{expr}{an R expression that creates graphics}
 
 \item{res}{passed to \link{png}}
+
+\item{bg}{passed to \link{png}}
 }
 \description{
-Gifski converts video frames to high quality GIF animations. Either provide your own
-png files, or automatically save animated graphics from the R graphics device.
+Gifski converts image frames to high quality GIF animations. Either provide input
+png files, or automatically render animated graphics from the R graphics device.
 }
 \examples{
 # Manually convert png files to gif
@@ -58,6 +61,6 @@ makeplot <- function(){
     print(p)
   })
 }
-gif_file <- save_gif(makeplot(), 'gapminder.gif')
+gif_file <- save_gif(makeplot(), 'gapminder.gif', width = )
 \donttest{utils::browseURL(gif_file)}
 }

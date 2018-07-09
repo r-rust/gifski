@@ -1,0 +1,12 @@
+RWINLIB = ../windows/gifski-0.8.4
+PKG_CPPFLAGS= -I$(RWINLIB)/include
+PKG_LIBS= -L$(RWINLIB)/lib${R_ARCH} \
+	-lgifski -lws2_32 -ladvapi32 -luserenv -ldbghelp
+
+all: clean winlibs
+
+winlibs:
+	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" "../tools/winlibs.R"
+
+clean:
+	rm -f $(SHLIB) $(OBJECTS)
