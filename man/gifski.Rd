@@ -5,12 +5,11 @@
 \alias{save_gif}
 \title{Gifski}
 \usage{
-gifski(png_files, gif_file = "animation.gif", width = 480, height = 480,
+gifski(png_files, gif_file = "animation.gif", width = 800, height = 600,
   delay = 1, loop = TRUE, progress = TRUE)
 
-save_gif(expr, gif_file = "animation.gif", width = 1280, height = 720,
-  res = 144, bg = "transparent", delay = 1, loop = TRUE,
-  progress = TRUE)
+save_gif(expr, gif_file = "animation.gif", width = 800, height = 600,
+  delay = 1, loop = TRUE, progress = TRUE, ...)
 }
 \arguments{
 \item{png_files}{vector of png files}
@@ -29,9 +28,7 @@ save_gif(expr, gif_file = "animation.gif", width = 1280, height = 720,
 
 \item{expr}{an R expression that creates graphics}
 
-\item{res}{passed to \link{png}}
-
-\item{bg}{passed to \link{png}}
+\item{...}{other graphical parameters passed to \link{png}}
 }
 \description{
 Gifski converts image frames to high quality GIF animations. Either provide input
@@ -49,6 +46,7 @@ gif_file <- gifski(png_files)
 unlink(png_files)
 \donttest{utils::browseURL(gif_file)}
 
+\donttest{
 # Example borrowed from gganimate
 library(gapminder)
 library(ggplot2)
@@ -61,6 +59,8 @@ makeplot <- function(){
     print(p)
   })
 }
-gif_file <- save_gif(makeplot(), 'gapminder.gif', width = )
-\donttest{utils::browseURL(gif_file)}
+
+# High Definition images:
+gif_file <- save_gif(makeplot(), 'gapminder.gif', 1280, 720, res = 144)
+utils::browseURL(gif_file)}
 }

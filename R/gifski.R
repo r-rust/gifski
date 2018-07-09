@@ -25,7 +25,7 @@
 #' unlink(png_files)
 #' \donttest{utils::browseURL(gif_file)}
 #'
-gifski <- function(png_files, gif_file = 'animation.gif', width = 480, height = 480, delay = 1, loop = TRUE, progress = TRUE){
+gifski <- function(png_files, gif_file = 'animation.gif', width = 800, height = 600, delay = 1, loop = TRUE, progress = TRUE){
   png_files <- normalizePath(png_files, mustWork = TRUE)
   stopifnot(is.character(gif_file))
   width <- as.integer(width)
@@ -39,9 +39,9 @@ gifski <- function(png_files, gif_file = 'animation.gif', width = 480, height = 
 #' @export
 #' @rdname gifski
 #' @param expr an R expression that creates graphics
-#' @param res passed to \link{png}
-#' @param bg passed to \link{png}
+#' @param ... other graphical parameters passed to \link{png}
 #' @examples
+#' \donttest{
 #' # Example borrowed from gganimate
 #' library(gapminder)
 #' library(ggplot2)
@@ -54,15 +54,18 @@ gifski <- function(png_files, gif_file = 'animation.gif', width = 480, height = 
 #'     print(p)
 #'   })
 #' }
-#' gif_file <- save_gif(makeplot(), 'gapminder.gif', width = )
-#' \donttest{utils::browseURL(gif_file)}
-save_gif <- function(expr, gif_file = 'animation.gif', width = 1280, height = 720, res = 144,
-                     bg = "transparent", delay = 1, loop = TRUE, progress = TRUE){
+#'
+#' # High Definition images:
+#' gif_file <- save_gif(makeplot(), 'gapminder.gif', 1280, 720, res = 144)
+#' utils::browseURL(gif_file)}
+save_gif <- function(expr, gif_file = 'animation.gif', width = 800, height = 600, delay = 1,
+                     loop = TRUE, progress = TRUE, ...){
   imgdir <- tempfile('tmppng')
   dir.create(imgdir)
   on.exit(unlink(imgdir, recursive = TRUE))
   filename <- file.path(imgdir, "tmpimg_%05d.png")
-  grDevices::png(filename, width = width, height = height, res = res, bg = bg)
+  grDevices::png(filename, width = width, height = height, ...)
+  graphics::par(ask = FALSE)
   eval(expr)
   grDevices::dev.off()
   images <- list.files(imgdir, pattern = 'tmpimg_\\d{5}.png', full.names = TRUE)
