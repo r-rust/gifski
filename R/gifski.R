@@ -62,7 +62,7 @@ save_gif <- function(expr, gif_file = 'animation.gif', width = 1280, height = 72
   dir.create(imgdir)
   on.exit(unlink(imgdir, recursive = TRUE))
   filename <- file.path(imgdir, "tmpimg_%05d.png")
-  grDevices::png(filename, width = width, height = height, res = res, bg = bg, type = 'cairo')
+  grDevices::png(filename, width = width, height = height, res = res, bg = bg)
   eval(expr)
   grDevices::dev.off()
   images <- list.files(imgdir, pattern = 'tmpimg_\\d{5}.png', full.names = TRUE)
