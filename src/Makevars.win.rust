@@ -1,0 +1,22 @@
+TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
+LIBDIR = myrustlib/target/$(TARGET)/release
+STATLIB = $(LIBDIR)/myrustlib.lib
+PKG_LIBS = -L$(LIBDIR) -lmyrustlib -lws2_32 -ladvapi32 -luserenv -ldbghelp
+
+# These can also be set in ~/.cargo/config
+export CARGO_TARGET_I686_PC_WINDOWS_GNU_LINKER=$(CC)
+export CC=$(CC)
+export AR=$(AR)
+
+# This bypasses the exception stuff
+#export CARGO_TARGET_I686_PC_WINDOWS_GNU_RUSTFLAGS=-C panic=abort
+
+all: clean
+
+$(SHLIB): $(STATLIB)
+
+$(STATLIB):
+	cargo build --target=$(TARGET) --release --manifest-path=myrustlib/Cargo.toml
+
+clean:
+	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) myrustlib/target
