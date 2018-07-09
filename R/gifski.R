@@ -23,7 +23,9 @@
 #' png_files <- sprintf("frame%03d.png", 1:10)
 #' gif_file <- gifski(png_files)
 #' unlink(png_files)
+#' \donttest{
 #' utils::browseURL(gif_file)
+#' }
 gifski <- function(png_files, gif_file = 'animation.gif', width = 480, height = 480, delay = 1, loop = TRUE, progress = TRUE){
   png_files <- normalizePath(png_files, mustWork = TRUE)
   stopifnot(is.character(gif_file))

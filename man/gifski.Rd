@@ -36,5 +36,7 @@ dev.off()
 png_files <- sprintf("frame\%03d.png", 1:10)
 gif_file <- gifski(png_files)
 unlink(png_files)
+\donttest{
 utils::browseURL(gif_file)
+}
 }
