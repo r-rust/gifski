@@ -2,10 +2,14 @@
 % Please edit documentation in R/gifski.R
 \name{gifski}
 \alias{gifski}
+\alias{save_gif}
 \title{Gifski}
 \usage{
 gifski(png_files, gif_file = "animation.gif", width = 480, height = 480,
   delay = 1, loop = TRUE, progress = TRUE)
+
+save_gif(expr, gif_file = "animation.gif", width = 1280, height = 720,
+  res = 144, delay = 1, loop = TRUE, progress = TRUE)
 }
 \arguments{
 \item{png_files}{vector of png files}
@@ -21,13 +25,17 @@ gifski(png_files, gif_file = "animation.gif", width = 480, height = 480,
 \item{loop}{should the gif play forever (FALSE to only play once)}
 
 \item{progress}{show progress bar}
+
+\item{expr}{an R expression that creates graphics}
+
+\item{res}{passed to \link{png}}
 }
 \description{
-Gifski converts video frames to GIF animations using pngquant's fancy features
-for efficient cross-frame palettes and temporal dithering. It produces animated
-GIFs that use thousands of colors per frame.
+Gifski converts video frames to high quality GIF animations. Either provide your own
+png files, or automatically save animated graphics from the R graphics device.
 }
 \examples{
+# Manually convert png files to gif
 png("frame\%03d.png")
 par(ask = FALSE)
 for(i in 1:10)
@@ -36,7 +44,20 @@ dev.off()
 png_files <- sprintf("frame\%03d.png", 1:10)
 gif_file <- gifski(png_files)
 unlink(png_files)
-\donttest{
-utils::browseURL(gif_file)
+\donttest{utils::browseURL(gif_file)}
+
+# Example borrowed from gganimate
+library(gapminder)
+library(ggplot2)
+makeplot <- function(){
+  datalist <- split(gapminder, gapminder$year)
+  lapply(datalist, function(data){
+    p <- ggplot(data, aes(gdpPercap, lifeExp, size = pop, color = continent)) +
+      scale_size("population", limits = range(gapminder$pop)) + geom_point() + ylim(20, 90) +
+      scale_x_log10(limits = range(gapminder$gdpPercap)) + ggtitle(data$year) + theme_classic()
+    print(p)
+  })
 }
+gif_file <- save_gif(makeplot(), 'gapminder.gif')
+\donttest{utils::browseURL(gif_file)}
 }
