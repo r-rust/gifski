@@ -31,7 +31,7 @@ gifski <- function(png_files, gif_file = 'animation.gif', width = 480, height = 
   stopifnot(is.character(gif_file))
   width <- as.integer(width)
   height <- as.integer(height)
-  delay <- as.integer(delay / 100)
+  delay <- as.integer(delay * 100)
   loop <- as.logical(loop)
   progress <- as.logical(progress)
   .Call(R_png_to_gif, png_files, gif_file, width, height, delay, loop, progress)
