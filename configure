@@ -1,14 +1,19 @@
-#!/bin/bash
+#!/usr/bin/env bash
 if [ $(command -v cargo) ]; then
+  which cargo
   cargo --version
+elif [[ $OSTYPE == "darwin"* ]]; then
+  curl "https://jeroen.github.io/autobrew/rustc" -sSf | sh
 else
-  echo "--------------------------------------------------------------------"
-  echo "Cargo not found on PATH. Please install cargo / rustc:"
+  echo "------------------ RUST COMPILER NOT FOUND --------------------"
+  echo "Cargo was not found on the PATH. Please install cargo / rustc:"
   echo ""
-  echo " - brew install rustc (MacOS)"
-  echo " - sudo apt-get install cargo (Debian/Ubuntu)"
-  echo " - sudo yum install cargo (Fedora/CentOS)"
-  echo "--------------------------------------------------------------------"
+  echo " - apt-get install cargo    (Debian/Ubuntu)"
+  echo " - yum install cargo        (Fedora/CentOS)"
+  echo " - brew install rustc       (MacOS)"
+  echo ""
+  echo "Or alternatively install rustc from https://www.rust-lang.org"
+  echo "---------------------------------------------------------------"
   echo ""
   exit 1;
 fi
