@@ -1,19 +1,29 @@
 #!/usr/bin/env bash
-if [ $(command -v cargo) ]; then
-  which cargo
-  cargo --version
-elif [[ $OSTYPE == "darwin"* ]]; then
+export PATH="$PATH:$HOME/.cargo/bin"
+cargo --version >/dev/null 2>&1
+if [ $? -ne 0 ]; then
   curl "https://jeroen.github.io/autobrew/rustc" -sSf | sh
-else
-  echo "------------------ RUST COMPILER NOT FOUND --------------------"
-  echo "Cargo was not found on the PATH. Please install cargo / rustc:"
-  echo ""
-  echo " - apt-get install cargo    (Debian/Ubuntu)"
-  echo " - yum install cargo        (Fedora/CentOS)"
-  echo " - brew install rustc       (MacOS)"
-  echo ""
-  echo "Or alternatively install rustc from https://www.rust-lang.org"
-  echo "---------------------------------------------------------------"
-  echo ""
-  exit 1;
 fi
+
+# Write 'cargo' to Makevars
+cargo --version >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+  CARGO=$(which cargo)
+  VERSION=$($CARGO --version)
+  echo "Using $CARGO ($VERSION)"
+  sed -e "s|@cargobin@|$CARGO|" src/Makevars.in > src/Makevars
+  exit 0
+fi
+
+# Friendly error message
+echo "------------------ RUST COMPILER NOT FOUND --------------------"
+echo "Cargo was not found on the PATH. Please install cargo / rustc:"
+echo ""
+echo " - apt-get install cargo    (Debian/Ubuntu)"
+echo " - yum install cargo        (Fedora/CentOS)"
+echo " - brew install rustc       (MacOS)"
+echo ""
+echo "Or alternatively install rustc from https://www.rust-lang.org"
+echo "---------------------------------------------------------------"
+echo ""
+exit 1

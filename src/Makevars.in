@@ -2,9 +2,9 @@ LIBDIR = myrustlib/target/release
 STATLIB = $(LIBDIR)/libmyrustlib.a
 PKG_CFLAGS = -pthread
 PKG_LIBS = -L$(LIBDIR) -lmyrustlib -lresolv -pthread
-CARGO = cargo
+CARGO = @cargobin@
 
-#all: clean
+all: clean
 
 $(SHLIB): $(STATLIB)
 

@@ -7,3 +7,4 @@
 ^appveyor.yml$
 \.png$
 \.gif$
+src/Makevars$
