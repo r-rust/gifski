@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 export PATH="$PATH:$HOME/.cargo/bin"
-cargo --version >/dev/null 2>&1
-if [ $? -ne 0 ] && [[ $OSTYPE == "darwin"* ]]; then
-  curl "https://jeroen.github.io/autobrew/rustc" -sSf | sh
-fi
 
 # Write 'cargo' to Makevars
 cargo --version >/dev/null 2>&1
@@ -15,15 +11,18 @@ if [ $? -eq 0 ]; then
   exit 0
 fi
 
-# Friendly error message
+# Try local version on MacOS, otherwise error
+[[ $OSTYPE == "darwin"* ]] && curl "https://jeroen.github.io/autobrew/rustc" -sSf | sh && exit 0
 echo "------------------ RUST COMPILER NOT FOUND --------------------"
+echo ""
 echo "Cargo was not found on the PATH. Please install cargo / rustc:"
 echo ""
 echo " - yum install cargo         (Fedora/CentOS)"
 echo " - apt-get install cargo     (Debian/Ubuntu)"
 echo " - brew install rustc        (MacOS)"
 echo ""
-echo "Or alternatively install rustc from https://www.rust-lang.org"
+echo "Alternatively install Rust from: <https://www.rust-lang.org>"
+echo ""
 echo "---------------------------------------------------------------"
 echo ""
 exit 1
