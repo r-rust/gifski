@@ -7,13 +7,15 @@ pandoc: false
 matrix:
   include:
     - os: linux
+      addons:
+        apt:
+          packages: cargo
     - os: linux
       addons:
         apt:
           sources:
-            - sourceline: 'ppa:ubuntu-mozilla-security/rust-updates'
-          packages:
-            - cargo
+            sourceline: 'ppa:ubuntu-mozilla-security/rust-updates'
+          packages: cargo
     - os: osx
       osx_image: xcode9.3
       brew_packages: rust
