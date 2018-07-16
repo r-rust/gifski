@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 export PATH="$PATH:$HOME/.cargo/bin"
 cargo --version >/dev/null 2>&1
-if [ $? -ne 0 ]; then
+if [ $? -ne 0 ] && [[ $OSTYPE == "darwin"* ]]; then
   curl "https://jeroen.github.io/autobrew/rustc" -sSf | sh
 fi
 
@@ -19,9 +19,9 @@ fi
 echo "------------------ RUST COMPILER NOT FOUND --------------------"
 echo "Cargo was not found on the PATH. Please install cargo / rustc:"
 echo ""
-echo " - apt-get install cargo    (Debian/Ubuntu)"
-echo " - yum install cargo        (Fedora/CentOS)"
-echo " - brew install rustc       (MacOS)"
+echo " - yum install cargo         (Fedora/CentOS)"
+echo " - apt-get install cargo     (Debian/Ubuntu)"
+echo " - brew install rustc        (MacOS)"
 echo ""
 echo "Or alternatively install rustc from https://www.rust-lang.org"
 echo "---------------------------------------------------------------"
