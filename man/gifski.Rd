@@ -36,13 +36,15 @@ png files, or automatically render animated graphics from the R graphics device.
 }
 \examples{
 # Manually convert png files to gif
-png("frame\%03d.png")
+png_path <- file.path(tempdir(), "frame\%03d.png")
+png(png_path)
 par(ask = FALSE)
 for(i in 1:10)
   plot(rnorm(i * 10), main = i)
 dev.off()
-png_files <- sprintf("frame\%03d.png", 1:10)
-gif_file <- gifski(png_files)
+png_files <- sprintf(png_path, 1:10)
+gif_file <- tempfile(fileext = ".gif")
+gifski(png_files, gif_file)
 unlink(png_files)
 \donttest{utils::browseURL(gif_file)}
 
@@ -61,6 +63,7 @@ makeplot <- function(){
 }
 
 # High Definition images:
-gif_file <- save_gif(makeplot(), 'gapminder.gif', 1280, 720, res = 144)
+gif_file <- file.path(tempdir(), 'gapminder.gif')
+save_gif(makeplot(), gif_file, 1280, 720, res = 144)
 utils::browseURL(gif_file)}
 }
