@@ -29,7 +29,9 @@
 #'
 gifski <- function(png_files, gif_file = 'animation.gif', width = 800, height = 600, delay = 1, loop = TRUE, progress = TRUE){
   png_files <- normalizePath(png_files, mustWork = TRUE)
-  stopifnot(is.character(gif_file))
+  gif_file <- normalizePath(gif_file, mustWork = FALSE)
+  if(!file.exists(dirname(gif_file)))
+    stop("Target directory does not exist:", dirname(gif_file))
   width <- as.integer(width)
   height <- as.integer(height)
   delay <- as.integer(delay * 100)

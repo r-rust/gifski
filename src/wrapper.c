@@ -8,6 +8,7 @@
 
 /* data to pass to encoder thread */
 typedef struct {
+  int complete;
   const char * path;
   gifski * g;
 } gifski_encoder_thread_info;
@@ -15,8 +16,9 @@ typedef struct {
 /* gifski_write() blocks until main thread calls gifski_end_adding_frames() */
 void * gifski_encoder_thread(void * data){
   gifski_encoder_thread_info * info = data;
-  gifski_write(info->g, info->path);
-  gifski_drop(info->g);
+  if(gifski_write(info->g, info->path) != GIFSKI_OK)
+    REprintf("Failure writing to '%s'\n", info->path);
+  info->complete = 1;
   return NULL;
 }
 
@@ -36,12 +38,16 @@ SEXP R_png_to_gif(SEXP png_files, SEXP gif_file, SEXP width, SEXP height, SEXP d
 
   /* create encoder thread; TODO: maybe we can use multiple encoder threads? */
   pthread_t encoder_thread;
-  gifski_encoder_thread_info info = {CHAR(STRING_ELT(gif_file, 0)), g};
+  gifski_encoder_thread_info info = {0, CHAR(STRING_ELT(gif_file, 0)), g};
   if(pthread_create(&encoder_thread, NULL, gifski_encoder_thread, &info))
     Rf_error("Failed to create encoder thread");
 
   /* add png frames in main thread */
   for(size_t i = 0; i < Rf_length(png_files); i++){
+    if(info.complete){
+      gifski_drop(g);
+      Rf_error("Writer thread has died");
+    }
     if(gifski_add_frame_png_file(g, i, CHAR(STRING_ELT(png_files, i)), Rf_asInteger(delay)) != GIFSKI_OK)
       Rprintf("Failed to add frame %d\n", i);
     if(Rf_asLogical(progress))
@@ -52,6 +58,7 @@ SEXP R_png_to_gif(SEXP png_files, SEXP gif_file, SEXP width, SEXP height, SEXP d
   if(Rf_asLogical(progress))
     Rprintf("\nFinalizing encoding...");
   gifski_end_adding_frames(g);
+  gifski_drop(g);
   if(Rf_asLogical(progress))
     Rprintf(" done!\n");
 
