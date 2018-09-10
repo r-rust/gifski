@@ -71,7 +71,7 @@ save_gif <- function(expr, gif_file = 'animation.gif', width = 800, height = 600
   filename <- file.path(imgdir, "tmpimg_%05d.png")
   grDevices::png(filename, width = width, height = height, ...)
   graphics::par(ask = FALSE)
-  tryCatch(eval(expr), finally = dev.off())
+  tryCatch(eval(expr), finally = grDevices::dev.off())
   images <- list.files(imgdir, pattern = 'tmpimg_\\d{5}.png', full.names = TRUE)
   gifski(images, gif_file = gif_file, width = width, height = height, delay = delay, loop = loop, progress = progress)
 }
