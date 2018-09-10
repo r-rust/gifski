@@ -18,6 +18,7 @@ void * gifski_encoder_thread(void * data){
   gifski_encoder_thread_info * info = data;
   if(gifski_write(info->g, info->path) != GIFSKI_OK)
     REprintf("Failure writing to '%s'\n", info->path);
+  gifski_drop(info->g);
   info->complete = 1;
   return NULL;
 }
@@ -58,7 +59,6 @@ SEXP R_png_to_gif(SEXP png_files, SEXP gif_file, SEXP width, SEXP height, SEXP d
   if(Rf_asLogical(progress))
     Rprintf("\nFinalizing encoding...");
   gifski_end_adding_frames(g);
-  gifski_drop(g);
   if(Rf_asLogical(progress))
     Rprintf(" done!\n");
 
