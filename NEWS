@@ -1,2 +1,3 @@
-0.8.3.1
+0.8.6
   - save_gif() now properly closes graphics device when expr errors
+  - safer C code to prevent segfaults on write errors
