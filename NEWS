@@ -1,3 +1,5 @@
 0.8.6
+  - Update gifski crate to 0.8.6
   - save_gif() now properly closes graphics device when expr errors
-  - safer C code to prevent segfaults on write errors
+  - More rubust C code to prevent segfaults on write errors
+  - File paths are now converted to UTF-8 as described in gifski.h

@@ -10,9 +10,9 @@
 
 /* data to pass to encoder thread */
 typedef struct {
-  const char * path;
+  const char *path;
   GifskiError err;
-  gifski * g;
+  gifski *g;
 } gifski_encoder_thread_info;
 
 /* gifski_write() blocks until main thread calls gifski_end_adding_frames() */
@@ -34,7 +34,7 @@ SEXP R_png_to_gif(SEXP png_files, SEXP gif_file, SEXP width, SEXP height, SEXP d
   settings.once = !Rf_asLogical(loop);
 
   /* init in main thread */
-  gifski * g = gifski_new(&settings);
+  gifski *g = gifski_new(&settings);
 
   /* create encoder thread; TODO: maybe we can use multiple encoder threads? */
   pthread_t encoder_thread;
