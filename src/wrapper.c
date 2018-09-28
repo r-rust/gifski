@@ -1,6 +1,8 @@
 #define R_NO_REMAP
 #define STRICT_R_HEADERS
 #include <Rinternals.h>
+#include <R_ext/Rdynload.h>
+#include <R_ext/Visibility.h>
 
 // Import C headers for rust API
 #include <pthread.h>
@@ -14,7 +16,7 @@ typedef struct {
 } gifski_encoder_thread_info;
 
 /* gifski_write() blocks until main thread calls gifski_end_adding_frames() */
-void * gifski_encoder_thread(void * data){
+static void * gifski_encoder_thread(void * data){
   gifski_encoder_thread_info * info = data;
   info->err = gifski_write(info->g, info->path);
   return NULL;
@@ -74,7 +76,7 @@ static const R_CallMethodDef CallEntries[] = {
   {NULL, NULL, 0}
 };
 
-void R_init_gifski(DllInfo *dll) {
+attribute_visible void R_init_gifski(DllInfo *dll) {
   R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
   R_useDynamicSymbols(dll, FALSE);
 }
