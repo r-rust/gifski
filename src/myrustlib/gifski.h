@@ -1,8 +1,11 @@
-/* UPSTREAM: https://github.com/ImageOptim/gifski/blob/master/gifski.h */
-
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct gifski;
 typedef struct gifski gifski;
@@ -12,22 +15,25 @@ typedef struct gifski gifski;
   Please note that it is impossible to use this API in a single-threaded program.
   You must have at least two threads -- one for adding the frames, and another for writing.
 
- ```c
- gifski *g = gifski_new(&settings);
+```c
+gifski *g = gifski_new(&settings);
 
- // Call on decoder thread:
- gifski_add_frame_rgba(g, i, width, height, buffer, 5);
- gifski_end_adding_frames(g);
+// Call asynchronously on a decoder thread:
+{
+   gifski_add_frame_rgba(g, i, width, height, buffer, 5);
+   gifski_end_adding_frames(g);
+}
 
- // Call on encoder thread:
- gifski_write(g, "file.gif");
- gifski_drop(g);
- ```
+// Call on encoder thread:
+gifski_write(g, "file.gif"); // blocking
+gifski_drop(g); // must be on the same thread as gifski_write() call
+```
 
- It's safe to call `gifski_drop()` after `gifski_write()`, because `gifski_write()` blocks until `gifski_end_adding_frames()` is called.
+It's safe to call `gifski_drop()` after `gifski_write()`, because `gifski_write()` blocks until `gifski_end_adding_frames()` is called.
 
- It's safe and efficient to call `gifski_add_frame_*` in a loop as fast as you can get frames,
- because it blocks and waits until previous frames are written.
+It's safe and efficient to call `gifski_add_frame_*` in a loop as fast as you can get frames,
+because it blocks and waits until previous frames are written.
+
 */
 
 /**
@@ -120,9 +126,13 @@ GifskiError gifski_add_frame_png_file(gifski *handle,
                                uint16_t delay);
 
 /**
- * Pixels is an array width×height×4 bytes large. The array is copied, so you can free/reuse it immediately.
+ * `pixels` is an array width×height×4 bytes large.
+ * The array is copied, so you can free/reuse it immediately after this function returns.
  *
- * Delay is in 1/100ths of a second.
+ * `index` is the frame number, counting from 0.
+ * You can add frames in any order (if you need to), and they will be sorted by their index.
+ *
+ * Delay is in 1/100ths of a second. 5 is 20fps.
  *
  * While you add frames, `gifski_write()` should be running already on another thread.
  * If `gifski_write()` is not running already, it may make `gifski_add_frame_*` block and wait for
@@ -141,7 +151,8 @@ GifskiError gifski_add_frame_rgba(gifski *handle,
 
 /** Same as `gifski_add_frame_rgba`, except it expects components in ARGB order.
 
-Bytes per row must be multiple of 4 and greater or equal width×4.
+Bytes per row must be multiple of 4, and greater or equal width×4.
+If the bytes per row value is invalid (e.g. an odd number), frames may look sheared/skewed.
 */
 GifskiError gifski_add_frame_argb(gifski *handle,
                            uint32_t index,
@@ -153,7 +164,8 @@ GifskiError gifski_add_frame_argb(gifski *handle,
 
 /** Same as `gifski_add_frame_rgba`, except it expects RGB components (3 bytes per pixel)
 
-Bytes per row must be multiple of 3 and greater or equal width×3.
+Bytes per row must be multiple of 3, and greater or equal width×3.
+If the bytes per row value is invalid (not multiple of 3), frames may look sheared/skewed.
 */
 GifskiError gifski_add_frame_rgb(gifski *handle,
                            uint32_t index,
@@ -184,6 +196,7 @@ void gifski_set_progress_callback(gifski *handle, int (cb)(void *), void *user_d
 
 /**
  * Start writing to the `destination` and keep waiting for more frames until `gifski_end_adding_frames()` is called.
+ * The file path must be ASCII or valid UTF-8.
  *
  * This call will block until the entire file is written. You will need to add frames on another thread.
  *
@@ -195,3 +208,7 @@ GifskiError gifski_write(gifski *handle, const char *destination);
  * Call to free all memory
  */
 void gifski_drop(gifski *g);
+
+#ifdef __cplusplus
+}
+#endif
