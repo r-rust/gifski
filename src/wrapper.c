@@ -1,8 +1,6 @@
 #define R_NO_REMAP
 #define STRICT_R_HEADERS
 #include <Rinternals.h>
-#include <R_ext/Rdynload.h>
-#include <R_ext/Visibility.h>
 
 // Import C headers for rust API
 #include <pthread.h>
@@ -68,15 +66,4 @@ cleanup:
   if(info.err != GIFSKI_OK)
     Rf_error("Failure writing image %s", info.path);
   return gif_file;
-}
-
-// Standard R package stuff
-static const R_CallMethodDef CallEntries[] = {
-  {"R_png_to_gif", (DL_FUNC) &R_png_to_gif, 7},
-  {NULL, NULL, 0}
-};
-
-attribute_visible void R_init_gifski(DllInfo *dll) {
-  R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
-  R_useDynamicSymbols(dll, FALSE);
 }

@@ -15,7 +15,7 @@ BugReports: https://github.com/r-rust/gifski/issues
 SystemRequirements: Cargo (rustc package manager)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Suggests:
     ggplot2,
     gapminder
