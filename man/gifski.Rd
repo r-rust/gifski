@@ -5,8 +5,8 @@
 \alias{save_gif}
 \title{Gifski}
 \usage{
-gifski(png_files, gif_file = "animation.gif", width = 800, height = 600,
-  delay = 1, loop = TRUE, progress = TRUE)
+gifski(png_files, gif_file = "animation.gif", width = 800,
+  height = 600, delay = 1, loop = TRUE, progress = TRUE)
 
 save_gif(expr, gif_file = "animation.gif", width = 800, height = 600,
   delay = 1, loop = TRUE, progress = TRUE, ...)
@@ -67,3 +67,7 @@ gif_file <- file.path(tempdir(), 'gapminder.gif')
 save_gif(makeplot(), gif_file, 1280, 720, res = 144)
 utils::browseURL(gif_file)}
 }
+\seealso{
+Other gifski: \code{\link{streaming}}
+}
+\concept{gifski}

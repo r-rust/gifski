@@ -5,6 +5,7 @@
 #'
 #' @export
 #' @rdname gifski
+#' @family gifski
 #' @useDynLib gifski R_png_to_gif
 #' @param png_files vector of png files
 #' @param gif_file output gif file
