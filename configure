@@ -8,6 +8,13 @@ if [ $? -eq 0 ]; then
   VERSION=$($CARGO --version)
   echo "Using $CARGO ($VERSION)"
   sed -e "s|@cargobin@|$CARGO|" src/Makevars.in > src/Makevars
+
+  # CRAN forbids using $HOME during CMD check; try to override CARGO_HOME
+  if [ "$CARGO" == "/usr/bin/cargo" ] && [ "$_R_CHECK_SIZE_OF_TARBALL_" ]; then
+    if [ -z "$CARGO_HOME" ] && [ ! -e "$HOME/.cargo" ]; then
+      sed -i.bak "s|#export|export|" src/Makevars
+    fi
+  fi
   exit 0
 fi
 
