@@ -19,14 +19,14 @@ if [ $? -eq 0 ]; then
 fi
 
 # Try local version on MacOS, otherwise error
-[[ $OSTYPE == "darwin"* ]] && curl "https://jeroen.github.io/autobrew/rustc" -sSf | sh && exit 0
+[[ $OSTYPE == "darwin"* ]] && curl "https://jeroen.github.io/autobrew/rust" -sSf | sh && exit 0
 echo "------------------ RUST COMPILER NOT FOUND --------------------"
 echo ""
 echo "Cargo was not found on the PATH. Please install cargo / rustc:"
 echo ""
 echo " - yum install cargo         (Fedora/CentOS)"
 echo " - apt-get install cargo     (Debian/Ubuntu)"
-echo " - brew install rustc        (MacOS)"
+echo " - brew install rust         (MacOS)"
 echo ""
 echo "Alternatively install Rust from: <https://www.rust-lang.org>"
 echo ""
