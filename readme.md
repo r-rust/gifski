@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/r-rust/gifski.svg)](https://travis-ci.org/r-rust/gifski)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/r-rust/gifski)](https://ci.appveyor.com/project/jeroen/gifski)
+[![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/gifski)](http://cran.r-project.org/web/packages/gifski/index.html)
+
 
 > gifski converts video frames to GIF animations using pngquant's fancy features
   for efficient cross-frame palettes and temporal dithering. It produces animated GIFs that
