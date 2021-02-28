@@ -8,4 +8,3 @@ src/*.a
 src/myrustlib/target/*
 *.png
 *.gif
-src/Makevars
