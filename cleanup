@@ -1,2 +1,0 @@
-#!/bin/sh
-rm -Rf src/.cargo src/myrustlib/target

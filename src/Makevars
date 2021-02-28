@@ -3,15 +3,15 @@ STATLIB = $(LIBDIR)/libmyrustlib.a
 PKG_CFLAGS = -pthread $(C_VISIBILITY)
 PKG_LIBS = -L$(LIBDIR) -lmyrustlib -lresolv -pthread
 
-# CRAN policy forbids using $HOME
-export CARGO_HOME=$(PWD)/.cargo
-
 #all: clean
-
 $(SHLIB): $(STATLIB)
+
+# CRAN bs forbids writing $HOME and mandates wiping .cargo after each use
+export CARGO_HOME=$(PWD)/.cargo
 
 $(STATLIB):
 	PATH="$(HOME)/.cargo/bin:$(PATH)" cargo build --release --manifest-path=myrustlib/Cargo.toml
+	rm -Rf $(CARGO_HOME)
 
 clean:
 	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) myrustlib/target
