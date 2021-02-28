@@ -16,7 +16,7 @@ all: clean
 $(SHLIB): $(STATLIB)
 
 $(STATLIB):
-	PATH="$(RTOOLS40_HOME)/mingw$(WIN)/bin:$(PATH)" cargo build --target=$(TARGET) --release --manifest-path=myrustlib/Cargo.toml
+	PATH="/c/rtools40/mingw$(WIN)/bin:$(PATH)" cargo build --target=$(TARGET) --release --manifest-path=myrustlib/Cargo.toml
 
 clean:
 	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) myrustlib/target
