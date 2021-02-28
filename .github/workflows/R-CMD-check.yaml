@@ -47,8 +47,11 @@ jobs:
         run: |
           rustup target add i686-pc-windows-gnu
           rustup target add x86_64-pc-windows-gnu
-          cp -f src/Makevars.win.rust src/Makevars.win
-          cp -f /mingw64/lib/gcc/x86_64-w64-mingw32/8.3.0/libgcc.a /mingw64/lib/gcc/x86_64-w64-mingw32/8.3.0/libgcc_eh.a
+          Copy-Item src\Makevars.win.rust src\Makevars.win
+
+      - name: Temporary toolchain hack
+        if: runner.os == 'Windows' && matrix.config.r == 'release'
+        run: cp -f /mingw64/lib/gcc/x86_64-w64-mingw32/8.3.0/libgcc.a /mingw64/lib/gcc/x86_64-w64-mingw32/8.3.0/libgcc_eh.a
         shell: c:\rtools40\usr\bin\bash.exe --login {0}
 
       - name: Query dependencies
