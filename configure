@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+# mimics: source ~/.cargo/env
 export PATH="$HOME/.cargo/bin:$PATH"
 
 # Write 'cargo' to Makevars
