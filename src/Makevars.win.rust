@@ -4,7 +4,7 @@ STATLIB = $(LIBDIR)/libmyrustlib.a
 PKG_LIBS = -L$(LIBDIR) -lmyrustlib -lws2_32 -ladvapi32 -luserenv -ldbghelp
 
 # These can also be set in ~/.cargo/config
-#export CARGO_TARGET_I686_PC_WINDOWS_GNU_LINKER=C:\\rtools40\\mingw$(WIN)\\bin\\gcc
+export CARGO_TARGET_I686_PC_WINDOWS_GNU_LINKER=gcc
 #export CC=$(CC)
 #export AR=$(AR)
 
