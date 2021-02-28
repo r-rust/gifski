@@ -11,12 +11,14 @@ PKG_LIBS = -L$(LIBDIR) -lmyrustlib -lws2_32 -ladvapi32 -luserenv -ldbghelp
 # This bypasses the exception stuff
 #export CARGO_TARGET_I686_PC_WINDOWS_GNU_RUSTFLAGS=-C panic=abort
 
+GCCPATH=$(subst C:\,/c/,$(RTOOLS40_HOME))/mingw$(WIN)/bin
+
 all: clean
 
 $(SHLIB): $(STATLIB)
 
 $(STATLIB):
-	PATH="$(RTOOLS40_HOME)/mingw$(WIN)/bin:$(PATH)" cargo build --target=$(TARGET) --release --manifest-path=myrustlib/Cargo.toml
+	PATH="$(GCCPATH):$(PATH)" cargo build --target=$(TARGET) --release --manifest-path=myrustlib/Cargo.toml
 
 clean:
 	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) myrustlib/target
