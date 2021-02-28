@@ -48,10 +48,11 @@ jobs:
             override: true
 
       - name: Add more rust targets
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && matrix.config.r == 'release'
         run: |
           rustup target add i686-pc-windows-gnu
           rustup target add x86_64-pc-windows-gnu
+          Copy-Item src\Makevars.win.rust src\Makevars.win
 
       - name: Query dependencies
         run: |
