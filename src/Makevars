@@ -4,7 +4,7 @@ PKG_CFLAGS = -pthread $(C_VISIBILITY)
 PKG_LIBS = -L$(LIBDIR) -lmyrustlib -lresolv -pthread
 
 # CRAN policy forbids using $HOME
-export CARGO_HOME=$(R_PACKAGE_DIR)
+export CARGO_HOME=$(PWD)/.cargo
 
 #all: clean
 
