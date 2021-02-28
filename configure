@@ -2,11 +2,9 @@
 export PATH="$HOME/.cargo/bin:$PATH"
 
 # Write 'cargo' to Makevars
-cargo --version >/dev/null 2>&1
+cargo --version
 if [ $? -eq 0 ]; then
-  CARGO=$(which cargo)
-  VERSION=$($CARGO --version)
-  echo "Using $CARGO ($VERSION)"
+  echo "Using `which cargo`"
   exit 0
 fi
 
