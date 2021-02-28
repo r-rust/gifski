@@ -1,5 +1,9 @@
-0.8.6.1
-  - CRAN nonsense
+0.8.7
+  - CRAN insists that we override the standard cargo/rust behaviour which
+    stores registry and crate data in ~/.cargo, because policy. So we now
+    build with CARGO_HOME set to a temporary dir that is deleted afterwards.
+    This probably makes this slower and more error prone, but I don't make
+    these rules.
 
 0.8.6
   - Update gifski crate to 0.8.6
