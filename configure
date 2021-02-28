@@ -9,7 +9,7 @@ if [ $? -eq 0 ]; then
 fi
 
 # Try local version on MacOS, otherwise error
-[[ $OSTYPE == "darwin"* ]] && curl "https://autobrew.github.io/scripts/rust" -sSf | sh && exit 0
+[ `uname` = "Darwin" ] && curl "https://autobrew.github.io/scripts/rust" -sSf | sh && exit 0
 echo "------------------ RUST COMPILER NOT FOUND --------------------"
 echo ""
 echo "Cargo was not found on the PATH. Please install cargo / rustc:"
