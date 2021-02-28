@@ -8,18 +8,11 @@ if [ $? -eq 0 ]; then
   VERSION=$($CARGO --version)
   echo "Using $CARGO ($VERSION)"
   sed -e "s|@cargobin@|$CARGO|" src/Makevars.in > src/Makevars
-
-  # CRAN forbids using $HOME during CMD check; try to override CARGO_HOME
-  if [ "$CARGO" == "/usr/bin/cargo" ] && [ "$_R_CHECK_SIZE_OF_TARBALL_" ]; then
-    if [ -z "$CARGO_HOME" ] && [ ! -e "$HOME/.cargo" ]; then
-      sed -i.bak "s|#export|export|" src/Makevars
-    fi
-  fi
   exit 0
 fi
 
 # Try local version on MacOS, otherwise error
-[[ $OSTYPE == "darwin"* ]] && curl "https://jeroen.github.io/autobrew/rust" -sSf | sh && exit 0
+[[ $OSTYPE == "darwin"* ]] && curl "https://autobrew.github.io/scripts/rust" -sSf | sh && exit 0
 echo "------------------ RUST COMPILER NOT FOUND --------------------"
 echo ""
 echo "Cargo was not found on the PATH. Please install cargo / rustc:"

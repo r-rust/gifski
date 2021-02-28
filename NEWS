@@ -1,3 +1,6 @@
+0.8.6.1
+  - CRAN nonsense
+
 0.8.6
   - Update gifski crate to 0.8.6
   - save_gif() now properly closes graphics device when expr errors

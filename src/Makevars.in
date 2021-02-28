@@ -5,7 +5,7 @@ PKG_LIBS = -L$(LIBDIR) -lmyrustlib -lresolv -pthread
 CARGO = @cargobin@
 
 # CRAN policy forbids using $HOME
-#export CARGO_HOME=$(R_PACKAGE_DIR)
+export CARGO_HOME=$(R_PACKAGE_DIR)
 
 #all: clean
 
