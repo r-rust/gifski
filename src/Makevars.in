@@ -12,7 +12,7 @@ export CARGO_HOME=$(R_PACKAGE_DIR)
 $(SHLIB): $(STATLIB)
 
 $(STATLIB):
-	$(CARGO) build --release --manifest-path=myrustlib/Cargo.toml
+	PATH="$(HOME)/.cargo/bin:$(PATH)" $(CARGO) build --release --manifest-path=myrustlib/Cargo.toml
 
 clean:
 	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) myrustlib/target

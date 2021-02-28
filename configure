@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-export PATH="$PATH:$HOME/.cargo/bin"
+export PATH="$HOME/.cargo/bin:$PATH"
 
 # Write 'cargo' to Makevars
 cargo --version >/dev/null 2>&1
