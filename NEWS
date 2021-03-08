@@ -1,3 +1,7 @@
+0.8.7.1
+  - Add workaround for compiling with old rustc compilers
+  - Add workaround for linking error with experimental UCRT toolchain
+
 0.8.7
   - CRAN insists that we override the standard cargo/rust behaviour which
     stores registry and crate data in ~/.cargo, because policy. So we now
