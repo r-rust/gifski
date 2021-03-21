@@ -1,3 +1,4 @@
+#include <stdarg.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -10,38 +11,31 @@ extern "C" {
 struct gifski;
 typedef struct gifski gifski;
 
-
-/*
-  Please note that it is impossible to use this API in a single-threaded program.
-  You must have at least two threads -- one for adding the frames, and another for writing.
+/**
+How to use from C
 
 ```c
-gifski *g = gifski_new(&settings);
+gifski *g = gifski_new(&(GifskiSettings){});
+gifski_set_file_output(g, "file.gif");
 
-// Call asynchronously on a decoder thread:
-{
-   gifski_add_frame_rgba(g, i, width, height, buffer, 5);
-   gifski_end_adding_frames(g);
+for(int i=0; i < frames; i++) {
+     int res = gifski_add_frame_rgba(g, i, width, height, buffer, 5);
+     if (res != GIFSKI_OK) break;
 }
-
-// Call on encoder thread:
-gifski_write(g, "file.gif"); // blocking
-gifski_drop(g); // must be on the same thread as gifski_write() call
+int res = gifski_finish(g);
+if (res != GIFSKI_OK) return;
 ```
-
-It's safe to call `gifski_drop()` after `gifski_write()`, because `gifski_write()` blocks until `gifski_end_adding_frames()` is called.
 
 It's safe and efficient to call `gifski_add_frame_*` in a loop as fast as you can get frames,
 because it blocks and waits until previous frames are written.
-
 */
 
 /**
  * Settings for creating a new encoder instance. See `gifski_new`
  */
-typedef struct {
+typedef struct GifskiSettings {
   /**
-   * Resize to max this width if non-0
+   * Resize to max this width if non-0.
    */
   uint32_t width;
   /**
@@ -49,17 +43,17 @@ typedef struct {
    */
   uint32_t height;
   /**
-   * 1-100, but useful range is 50-100. Recommended to set to 100.
+   * 1-100, but useful range is 50-100. Recommended to set to 90.
    */
   uint8_t quality;
   /**
-   * If true, looping is disabled. Recommended false (looping on).
-   */
-  bool once;
-  /**
-   * Lower quality, but faster encode
+   * Lower quality, but faster encode.
    */
   bool fast;
+  /**
+   * If negative, looping is disabled. The number of times the sequence is repeated. 0 to loop forever.
+   */
+  int16_t repeat;
 } GifskiSettings;
 
 enum GifskiError {
@@ -108,106 +102,153 @@ typedef enum GifskiError GifskiError;
 gifski *gifski_new(const GifskiSettings *settings);
 
 /**
- * File path must be valid UTF-8. This function is asynchronous.
+ * Adds a frame to the animation. This function is asynchronous.
  *
- * Delay is in 1/100ths of a second.
+ * File path must be valid UTF-8.
  *
- * While you add frames, `gifski_write()` should be running already on another thread.
- * If `gifski_write()` is not running already, it may make `gifski_add_frame_*` block and wait for
- * write to start.
+ * `frame_number` orders frames (consecutive numbers starting from 0).
+ * You can add frames in any order, and they will be sorted by their `frame_number`.
  *
- * Call `gifski_end_adding_frames()` after you add all frames.
+ * Presentation timestamp (PTS) is time in seconds, since start of the file, when this frame is to be displayed.
+ * For a 20fps video it could be `frame_number/20.0`.
+ * Frames with duplicate or out-of-order PTS will be skipped.
+ *
+ * The first frame should have PTS=0. If the first frame has PTS > 0, it'll be used as a delay after the last frame.
  *
  * Returns 0 (`GIFSKI_OK`) on success, and non-0 `GIFSKI_*` constant on error.
-*/
+ */
 GifskiError gifski_add_frame_png_file(gifski *handle,
-                               uint32_t index,
-                               const char *file_path,
-                               uint16_t delay);
+                                      uint32_t frame_number,
+                                      const char *file_path,
+                                      double presentation_timestamp);
 
 /**
+ * Adds a frame to the animation. This function is asynchronous.
+ *
  * `pixels` is an array width×height×4 bytes large.
  * The array is copied, so you can free/reuse it immediately after this function returns.
  *
- * `index` is the frame number, counting from 0.
- * You can add frames in any order (if you need to), and they will be sorted by their index.
+ * `frame_number` orders frames (consecutive numbers starting from 0).
+ * You can add frames in any order, and they will be sorted by their `frame_number`.
  *
- * Delay is in 1/100ths of a second. 5 is 20fps.
+ * Presentation timestamp (PTS) is time in seconds, since start of the file, when this frame is to be displayed.
+ * For a 20fps video it could be `frame_number/20.0`. First frame must have PTS=0.
+ * Frames with duplicate or out-of-order PTS will be skipped.
  *
- * While you add frames, `gifski_write()` should be running already on another thread.
- * If `gifski_write()` is not running already, it may make `gifski_add_frame_*` block and wait for
- * write to start.
- *
- * Call `gifski_end_adding_frames()` after you add all frames.
+ * Colors are in sRGB, uncorrelated RGBA, with alpha byte last.
  *
  * Returns 0 (`GIFSKI_OK`) on success, and non-0 `GIFSKI_*` constant on error.
  */
 GifskiError gifski_add_frame_rgba(gifski *handle,
-                           uint32_t index,
-                           uint32_t width,
-                           uint32_t height,
-                           const unsigned char *pixels,
-                           uint16_t delay);
+                                  uint32_t frame_number,
+                                  uint32_t width,
+                                  uint32_t height,
+                                  const unsigned char *pixels,
+                                  double presentation_timestamp);
 
-/** Same as `gifski_add_frame_rgba`, except it expects components in ARGB order.
+/** Same as `gifski_add_frame_rgba`, but with bytes per row arg */
+GifskiError gifski_add_frame_rgba_stride(gifski *handle,
+                                  uint32_t frame_number,
+                                  uint32_t width,
+                                  uint32_t height,
+                                  uint32_t bytes_per_row,
+                                  const unsigned char *pixels,
+                                  double presentation_timestamp);
+
+/** Same as `gifski_add_frame_rgba_stride`, except it expects components in ARGB order.
 
 Bytes per row must be multiple of 4, and greater or equal width×4.
 If the bytes per row value is invalid (e.g. an odd number), frames may look sheared/skewed.
+
+Colors are in sRGB, uncorrelated ARGB, with alpha byte first.
+
+`gifski_add_frame_rgba` is preferred over this function.
 */
 GifskiError gifski_add_frame_argb(gifski *handle,
-                           uint32_t index,
-                           uint32_t width,
-                           uint32_t bytes_per_row,
-                           uint32_t height,
-                           const unsigned char *pixels,
-                           uint16_t delay);
+                                  uint32_t frame_number,
+                                  uint32_t width,
+                                  uint32_t bytes_per_row,
+                                  uint32_t height,
+                                  const unsigned char *pixels,
+                                  double presentation_timestamp);
 
-/** Same as `gifski_add_frame_rgba`, except it expects RGB components (3 bytes per pixel)
+/** Same as `gifski_add_frame_rgba_stride`, except it expects RGB components (3 bytes per pixel)
 
 Bytes per row must be multiple of 3, and greater or equal width×3.
 If the bytes per row value is invalid (not multiple of 3), frames may look sheared/skewed.
+
+Colors are in sRGB, red byte first.
+
+`gifski_add_frame_rgba` is preferred over this function.
 */
 GifskiError gifski_add_frame_rgb(gifski *handle,
-                           uint32_t index,
-                           uint32_t width,
-                           uint32_t bytes_per_row,
-                           uint32_t height,
-                           const unsigned char *pixels,
-                           uint16_t delay);
+                                 uint32_t frame_number,
+                                 uint32_t width,
+                                 uint32_t bytes_per_row,
+                                 uint32_t height,
+                                 const unsigned char *pixels,
+                                 double presentation_timestamp);
 
 /**
- * You must call it at some point (after all frames are set), otherwise `gifski_write()` will never end!
+ * Get a callback for frame processed, and abort processing if desired.
  *
- * Returns 0 (`GIFSKI_OK`) on success, and non-0 `GIFSKI_*` constant on error.
- */
-GifskiError gifski_end_adding_frames(gifski *handle);
-
-/* Get a callback for frame processed, and abort processing if desired.
+ * The callback is called once per input frame,
+ * even if the encoder decides to skip some frames.
  *
- * The callback is called once per frame.
  * It gets arbitrary pointer (`user_data`) as an argument. `user_data` can be `NULL`.
- * The callback must be thread-safe (it will be called from another thread).
  *
  * The callback must return `1` to continue processing, or `0` to abort.
  *
- * Must be called before `gifski_write()` to take effect.
+ * The callback must be thread-safe (it will be called from another thread).
+ * It must remain valid at all times, until `gifski_finish` completes.
+ *
+ * This function must be called before `gifski_set_file_output()` to take effect.
  */
-void gifski_set_progress_callback(gifski *handle, int (cb)(void *), void *user_data);
+void gifski_set_progress_callback(gifski *handle, int (*progress_callback)(void *user_data), void *user_data);
 
 /**
- * Start writing to the `destination` and keep waiting for more frames until `gifski_end_adding_frames()` is called.
+ * Start writing to the file at `destination_path` (overwrites if needed).
  * The file path must be ASCII or valid UTF-8.
  *
- * This call will block until the entire file is written. You will need to add frames on another thread.
+ * This function has to be called before any frames are added.
+ * This call will not block.
  *
  * Returns 0 (`GIFSKI_OK`) on success, and non-0 `GIFSKI_*` constant on error.
  */
-GifskiError gifski_write(gifski *handle, const char *destination);
+GifskiError gifski_set_file_output(gifski *handle, const char *destination_path);
 
 /**
- * Call to free all memory
+ * Start writing via callback (any buffer, file, whatever you want). This has to be called before any frames are added.
+ * This call will not block.
+ *
+ * The callback function receives 3 arguments:
+ *  - size of the buffer to write, in bytes. IT MAY BE ZERO (when it's zero, either do nothing, or flush internal buffers if necessary).
+ *  - pointer to the buffer.
+ *  - context pointer to arbitary user data, same as passed in to this function.
+ *
+ * The callback should return 0 (`GIFSKI_OK`) on success, and non-zero on error.
+ *
+ * The callback function must be thread-safe. It must remain valid at all times, until `gifski_finish` completes.
+ *
+ * Returns 0 (`GIFSKI_OK`) on success, and non-0 `GIFSKI_*` constant on error.
  */
-void gifski_drop(gifski *g);
+GifskiError gifski_set_write_callback(gifski *handle,
+                                      int (*write_callback)(size_t buffer_length, const uint8_t *buffer, void *user_data),
+                                      void *user_data);
+
+/**
+ * The last step:
+ *  - stops accepting any more frames (gifski_add_frame_* calls are blocked)
+ *  - blocks and waits until all already-added frames have finished writing
+ *
+ * Returns final status of write operations. Remember to check the return value!
+ *
+ * Must always be called, otherwise it will leak memory.
+ * After this call, the handle is freed and can't be used any more.
+ *
+ * Returns 0 (`GIFSKI_OK`) on success, and non-0 `GIFSKI_*` constant on error.
+ */
+GifskiError gifski_finish(gifski *g);
 
 #ifdef __cplusplus
 }

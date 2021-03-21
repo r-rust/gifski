@@ -34,7 +34,7 @@ gifski <- function(png_files, gif_file = 'animation.gif', width = 800, height = 
     stop("Target directory does not exist:", dirname(gif_file))
   width <- as.integer(width)
   height <- as.integer(height)
-  delay <- as.integer(delay * 100)
+  delay <- as.numeric(delay)
   loop <- as.logical(loop)
   progress <- as.logical(progress)
   .Call(R_png_to_gif, enc2utf8(png_files), enc2utf8(gif_file), width, height, delay, loop, progress)
