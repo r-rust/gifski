@@ -14,7 +14,7 @@ int cb(void *user_data){
   return 1;
 }
 
-SEXP R_png_to_gif(SEXP png_files, SEXP gif_file, SEXP width, SEXP height, SEXP delay, SEXP loop, SEXP progress){
+SEXP R_png_to_gif(SEXP png_files, SEXP gif_file, SEXP width, SEXP height, SEXP delay, SEXP repeats, SEXP progress){
   if(!Rf_isString(png_files))
     Rf_error("png_files must be character vector");
 
@@ -23,7 +23,7 @@ SEXP R_png_to_gif(SEXP png_files, SEXP gif_file, SEXP width, SEXP height, SEXP d
   settings.width = Rf_asInteger(width);
   settings.quality = 100;
   settings.fast = 0;
-  settings.repeat = Rf_asLogical(loop);
+  settings.repeat = Rf_asInteger(repeats);
   gifski *g = gifski_new(&settings);
 
   /* Set a callback */

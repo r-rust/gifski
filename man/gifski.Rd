@@ -5,11 +5,26 @@
 \alias{save_gif}
 \title{Gifski}
 \usage{
-gifski(png_files, gif_file = "animation.gif", width = 800, height = 600,
-  delay = 1, loop = TRUE, progress = TRUE)
+gifski(
+  png_files,
+  gif_file = "animation.gif",
+  width = 800,
+  height = 600,
+  delay = 1,
+  loop = TRUE,
+  progress = TRUE
+)
 
-save_gif(expr, gif_file = "animation.gif", width = 800, height = 600,
-  delay = 1, loop = TRUE, progress = TRUE, ...)
+save_gif(
+  expr,
+  gif_file = "animation.gif",
+  width = 800,
+  height = 600,
+  delay = 1,
+  loop = TRUE,
+  progress = TRUE,
+  ...
+)
 }
 \arguments{
 \item{png_files}{vector of png files}
@@ -22,9 +37,10 @@ save_gif(expr, gif_file = "animation.gif", width = 800, height = 600,
 
 \item{delay}{time to show each image in seconds}
 
-\item{loop}{should the gif play forever (FALSE to only play once)}
+\item{loop}{if the gif should be repeated. Set to FALSE to only play
+once, or a number to indicate how many times to repeat after the first.}
 
-\item{progress}{show progress bar}
+\item{progress}{print some verbose status output}
 
 \item{expr}{an R expression that creates graphics}
 
