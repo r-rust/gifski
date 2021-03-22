@@ -42,7 +42,7 @@ SEXP R_png_to_gif(SEXP png_files, SEXP gif_file, SEXP width, SEXP height, SEXP d
 
   /* This will finalize the encoder thread as well */
   if(Rf_asLogical(progress))
-    REprintf("\nEncoding...");
+    REprintf("\nEncoding to gif...");
   if(gifski_finish(g) != GIFSKI_OK)
     Rf_error("Failed gifski_finish");
   if(Rf_asLogical(progress))

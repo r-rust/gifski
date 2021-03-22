@@ -1,7 +1,5 @@
 # gifski in R
 
-[![Build Status](https://travis-ci.org/r-rust/gifski.svg)](https://travis-ci.org/r-rust/gifski)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/r-rust/gifski)](https://ci.appveyor.com/project/jeroen/gifski)
 [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/gifski)](http://cran.r-project.org/web/packages/gifski/index.html)
 
 
