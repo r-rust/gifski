@@ -37,7 +37,7 @@ SEXP R_png_to_gif(SEXP png_files, SEXP gif_file, SEXP width, SEXP height, SEXP d
     if(gifski_add_frame_png_file(g, i, CHAR(STRING_ELT(png_files, i)), pts) != GIFSKI_OK)
       REprintf("Failed to add frame %d\n", i);
     if(Rf_asLogical(progress))
-      REprintf("\rQueuing frame %d at %.2fs (%d%%)...", (i+1), pts, (i+1) * 100 / Rf_length(png_files));
+      REprintf("\rInserting image %d at %.2fs (%d%%)...", (i+1), pts, (i+1) * 100 / Rf_length(png_files));
   }
 
   /* This will finalize the encoder thread as well */
