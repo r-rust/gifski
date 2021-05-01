@@ -1,7 +1,7 @@
 VERSION = 1.4.3
 RWINLIB = ../windows/gifski-$(VERSION)
 PKG_CPPFLAGS = -I$(RWINLIB)/include
-PKG_LIBS = -L$(RWINLIB)/lib${R_ARCH} \
+PKG_LIBS = -L$(RWINLIB)/lib${R_ARCH}${CRT} \
 	-lgifski -lws2_32 -ladvapi32 -luserenv -ldbghelp
 
 all: clean winlibs
