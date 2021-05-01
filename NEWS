@@ -1,3 +1,6 @@
+1.4.3-1:
+  - Add libgifski ucrt64 binary
+
 1.4.3
   - Major update in gifski rust library. This also required different
     threading implementation in the bindings.
