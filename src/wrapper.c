@@ -60,12 +60,3 @@ attribute_visible void R_init_gifski(DllInfo *dll) {
   R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
   R_useDynamicSymbols(dll, FALSE);
 }
-
-/* Workaround for linking error with experimental UCRT toolchain */
-#ifdef _WIN32
-#ifdef _UCRT
-FILE * __cdecl __imp___iob_func(void){
-  return NULL;
-}
-#endif
-#endif
