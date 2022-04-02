@@ -7,4 +7,4 @@ authors = ["Jeroen <jeroenooms@gmail.com>"]
 crate-type = ["staticlib"]
 
 [dependencies]
-gifski = "1.4.3"
+gifski = "1.6.6"
