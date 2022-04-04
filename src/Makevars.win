@@ -1,13 +1,25 @@
-VERSION = 1.4.3
-RWINLIB = ../windows/gifski-$(VERSION)
-PKG_CPPFLAGS = -I$(RWINLIB)/include
-PKG_LIBS = -L$(RWINLIB)/lib${R_ARCH}${CRT} \
-	-lgifski -lws2_32 -ladvapi32 -luserenv -ldbghelp -lbcrypt
+TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
+LIBDIR = myrustlib/target/$(TARGET)/release
+STATLIB = $(LIBDIR)/libmyrustlib.a
+PKG_LIBS = -L$(LIBDIR) -lmyrustlib -lws2_32 -ladvapi32 -luserenv -ldbghelp -lbcrypt
 
-all: clean winlibs
+# These can also be set in ~/.cargo/config
+#export CARGO_TARGET_I686_PC_WINDOWS_GNU_LINKER=C:\\rtools40\\mingw$(WIN)\\bin\\gcc
+#export CC=$(CC)
+#export AR=$(AR)
 
-winlibs:
-	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" "../tools/winlibs.R" $(VERSION)
+# This bypasses the exception stuff
+#export CARGO_TARGET_I686_PC_WINDOWS_GNU_RUSTFLAGS=-C panic=abort
+ifeq ($(R_COMPILED_BY),gcc 8.3.0)
+GCCPATH=$(subst C:\,/c/,$(RTOOLS40_HOME))/mingw$(WIN)/bin
+endif
+
+all: clean
+
+$(SHLIB): $(STATLIB)
+
+$(STATLIB):
+	PATH="$(GCCPATH):$(PATH)" cargo build --target=$(TARGET) --release --manifest-path=myrustlib/Cargo.toml
 
 clean:
-	rm -f $(SHLIB) $(OBJECTS)
+	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) myrustlib/target
