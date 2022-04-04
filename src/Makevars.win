@@ -14,7 +14,7 @@ ifeq ($(R_COMPILED_BY),gcc 8.3.0)
 GCCPATH=$(subst C:\,/c/,$(RTOOLS40_HOME))/mingw$(WIN)/bin
 endif
 
-all: clean
+all: clean rustup
 
 $(SHLIB): $(STATLIB)
 
@@ -23,3 +23,6 @@ $(STATLIB):
 
 clean:
 	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) myrustlib/target
+
+rustup:
+	rustup target add $(TARGET) || true
