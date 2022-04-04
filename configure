@@ -1,10 +1,23 @@
+#!/bin/sh
 # mimics: source ~/.cargo/env
 export PATH="$HOME/.cargo/bin:$PATH"
 
 # Write 'cargo' to Makevars
-cargo --version
+VERSION=$(cargo --version)
 if [ $? -eq 0 ]; then
   echo "Using `which cargo`"
+  echo "$VERSION"
+
+  # Check for old version of rustc (edition:2021 requires rust 1.56)
+  if [ "$(uname)" = "Linux" ]; then
+    VERNUM=$(echo $VERSION | cut -d' ' -f2) || true
+    MAJOR=$(echo $VERNUM | cut -d'.' -f1) || true
+    MINOR=$(echo $VERNUM | cut -d'.' -f2) || true
+    if [ "$MAJOR" -eq "1" ] && [ "$MINOR" -lt "56" ]; then
+      echo "Found old rust. Using legacy gifski 1.4.3 build."
+      cp -f src/legacy/* src/myrustlib/
+    fi
+  fi
   exit 0
 fi
 
