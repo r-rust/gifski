@@ -1,0 +1,28 @@
+TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
+LIBDIR = myrustlib/target/$(TARGET)/release
+STATLIB = $(LIBDIR)/libmyrustlib.a
+PKG_LIBS = -L$(LIBDIR) -lmyrustlib -lws2_32 -ladvapi32 -luserenv -ldbghelp -lbcrypt
+
+# These can also be set in ~/.cargo/config
+#export CARGO_TARGET_I686_PC_WINDOWS_GNU_LINKER=C:\\rtools40\\mingw$(WIN)\\bin\\gcc
+#export CC=$(CC)
+#export AR=$(AR)
+
+# This bypasses the exception stuff
+#export CARGO_TARGET_I686_PC_WINDOWS_GNU_RUSTFLAGS=-C panic=abort
+ifeq ($(R_COMPILED_BY),gcc 8.3.0)
+GCCPATH=$(subst C:\,/c/,$(RTOOLS40_HOME))/mingw$(WIN)/bin
+endif
+
+all: clean rustup
+
+$(SHLIB): $(STATLIB)
+
+$(STATLIB):
+	PATH="$(GCCPATH):$(PATH)" cargo build --target=$(TARGET) --release --manifest-path=myrustlib/Cargo.toml
+
+clean:
+	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) myrustlib/target
+
+rustup:
+	rustup target add $(TARGET) || true
