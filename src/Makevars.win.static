@@ -1,5 +1,5 @@
 VERSION = 1.6.6
-RWINLIB = ../windows/gifski-$(VERSION)
+RWINLIB = ../windows/gifski-winlibs
 PKG_CPPFLAGS = -I$(RWINLIB)/include
 PKG_LIBS = -L$(RWINLIB)/lib${R_ARCH}${CRT} \
 	-lgifski -lws2_32 -ladvapi32 -luserenv -ldbghelp -lbcrypt

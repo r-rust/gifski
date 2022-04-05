@@ -1,3 +1,13 @@
+1.6.6-1
+  - Fix build on legacy Windows Vista (i.e. the old winbuilder machine)
+
+1.6.6
+  - Update vendored gifski to upstream 1.6.6
+  - Note gifski 1.6.6 requires at least Rust 1.56. On older systems we fall
+    back on the previous gifski 1.4.3 version.
+  - New rust also does not work on Windows Vista / 2008 anymore (i.e. the
+    old cran winbuilder). So on this machine we also fall back on 1.4.3.
+
 1.4.3-1:
   - Add libgifski ucrt64 binary
 
