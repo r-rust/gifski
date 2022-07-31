@@ -22,7 +22,9 @@ all: clean rustup
 $(SHLIB): $(STATLIB)
 
 $(STATLIB):
-	mkdir -p myrustlib/target/release/deps; echo '!<arch>' > myrustlib/target/release/deps/libgcc_eh.a #hack for mxe-rtools42
+ifeq ($(WIN),64) #hack for mxe-rtools42
+	mkdir -p myrustlib/target/release/deps; echo '!<arch>' > myrustlib/target/release/deps/libgcc_eh.a
+endif
 	PATH="$(GCCPATH):$(USERPROFILE)\.cargo:$(PATH)" cargo build --target=$(TARGET) --release --manifest-path=myrustlib/Cargo.toml
 
 clean:
