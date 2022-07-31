@@ -12,7 +12,7 @@ PKG_LIBS = -L$(LIBDIR) -lmyrustlib -lws2_32 -ladvapi32 -luserenv -ldbghelp -lbcr
 #export CARGO_TARGET_I686_PC_WINDOWS_GNU_RUSTFLAGS=-C panic=abort
 ifeq ($(R_COMPILED_BY),gcc 8.3.0)
 GCCPATH=$(subst C:\,/c/,$(RTOOLS40_HOME))/mingw$(WIN)/bin
-else ifeq ($(WIN),64)
+else
 export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER=gcc
 GCCPATH=$(subst C:\,/c/,$(R_RTOOLS42_PATH))
 endif
@@ -22,7 +22,9 @@ all: clean rustup
 $(SHLIB): $(STATLIB)
 
 $(STATLIB):
+ifeq ($(WIN),64)
 	mkdir -p myrustlib/target/release/deps; echo '!<arch>' > myrustlib/target/release/deps/libgcc_eh.a #hack for mxe-rtools42
+endif
 	PATH="$(GCCPATH):$(USERPROFILE)\.cargo:$(PATH)" cargo build --target=$(TARGET) --release --manifest-path=myrustlib/Cargo.toml
 
 clean:
