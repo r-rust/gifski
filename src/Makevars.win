@@ -14,7 +14,7 @@ ifeq ($(R_COMPILED_BY),gcc 8.3.0)
 GCCPATH=$(subst C:\,/c/,$(RTOOLS40_HOME))/mingw$(WIN)/bin
 else
 # Either rtools40 or rtools42 ucrt toolchain is OK
-GCCPATH=$(subst C:\,/c/,$(RTOOLS40_HOME))/ucrt64/bin:$(R_RTOOLS42_PATH)
+GCCPATH=$(R_RTOOLS42_PATH):$(subst C:\,/c/,$(RTOOLS40_HOME))/ucrt64/bin
 export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER=gcc
 endif
 
