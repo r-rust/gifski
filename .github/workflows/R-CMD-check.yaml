@@ -16,9 +16,8 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-latest, r: '3.6', static: '-rwinlib'}
           - {os: windows-latest, r: '4.1', static: '-rwinlib'}
-          - {os: windows-latest, r: 'next', static: '-rwinlib'}
+          - {os: windows-latest, r: 'release', static: '-rwinlib'}
           - {os: windows-latest, r: '4.1'}
           - {os: windows-latest, r: 'release'}
           - {os: macOS-latest, r: 'release'}
@@ -31,23 +30,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: Install Rust on Linux
-        if: runner.os == 'Linux'
-        run: sudo apt-get install -y cargo
-
-      - name: Install Rust on Windows
-        if: runner.os == 'Windows'
-        uses: actions-rs/toolchain@v1
-        with:
-            toolchain: stable
-            override: true
-
-      - name: Add more rust targets
-        if: runner.os == 'Windows'
-        run: |
-          rustup target add i686-pc-windows-gnu
-          rustup target add x86_64-pc-windows-gnu
 
       - name: Use precompiled libgifski
         if: runner.os == 'Windows' && matrix.config.static
