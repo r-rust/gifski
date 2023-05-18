@@ -10,12 +10,11 @@ PKG_LIBS = -L$(LIBDIR) -lmyrustlib -lws2_32 -ladvapi32 -luserenv -ldbghelp -lbcr
 
 # This bypasses the exception stuff
 #export CARGO_TARGET_I686_PC_WINDOWS_GNU_RUSTFLAGS=-C panic=abort
+export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER=gcc
 ifeq ($(R_COMPILED_BY),gcc 8.3.0)
 GCCPATH=$(subst C:\,/c/,$(RTOOLS40_HOME))/mingw$(WIN)/bin
 else
-# Either rtools40 or rtools42 ucrt toolchain is OK
-GCCPATH=$(R_RTOOLS42_PATH):$(subst C:\,/c/,$(RTOOLS40_HOME))/ucrt64/bin
-export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER=gcc
+GCCPATH=$(subst C:\,/c/,$(RTOOLS43_HOME))/x86_64-w64-mingw32.static.posix/bin
 endif
 
 all: clean rustup
@@ -27,6 +26,7 @@ ifeq ($(WIN),64) #hack for mxe-rtools42
 	mkdir -p myrustlib/target/release/deps; echo '!<arch>' > myrustlib/target/release/deps/libgcc_eh.a
 endif
 	PATH="$(GCCPATH):$(USERPROFILE)\.cargo:$(PATH)" cargo build --target=$(TARGET) --release --manifest-path=myrustlib/Cargo.toml
+	rm -Rf $(LIBDIR)/build
 
 clean:
 	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) myrustlib/target
