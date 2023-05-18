@@ -10,10 +10,12 @@ PKG_LIBS = -L$(LIBDIR) -lmyrustlib -lws2_32 -ladvapi32 -luserenv -ldbghelp -lbcr
 
 # This bypasses the exception stuff
 #export CARGO_TARGET_I686_PC_WINDOWS_GNU_RUSTFLAGS=-C panic=abort
-export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER=gcc
 ifeq ($(R_COMPILED_BY),gcc 8.3.0)
 GCCPATH=$(subst C:\,/c/,$(RTOOLS40_HOME))/mingw$(WIN)/bin
+export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER=$(RTOOLS40_HOME)\\mingw64\\bin\\gcc
+export CARGO_TARGET_I686_PC_WINDOWS_GNU_LINKER=$(RTOOLS40_HOME)\\\mingw32\\bin\\gcc
 else
+export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER=gcc
 GCCPATH=$(subst C:\,/c/,$(RTOOLS43_HOME))/x86_64-w64-mingw32.static.posix/bin
 endif
 
