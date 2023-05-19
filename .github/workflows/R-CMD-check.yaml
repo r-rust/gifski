@@ -49,5 +49,7 @@ jobs:
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
+        with:
+          upload-results: true
         env:
           FORCE_STATIC_GIFSKI: ${{ matrix.config.FORCE_STATIC_GIFSKI }}
