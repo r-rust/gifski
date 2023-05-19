@@ -31,7 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - if: runner.os == 'windows' && matrix.config.r == '4.1'
+      - if: runner.os == 'windows'
         uses: r-windows/install-rtools@master
 
       - name: Use precompiled libgifski
