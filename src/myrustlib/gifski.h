@@ -111,10 +111,15 @@ enum GifskiError {
   /** misc I/O error */
   GIFSKI_UNEXPECTED_EOF,
   /** progress callback returned 0, writing aborted */
-  ABORTED,
+  GIFSKI_ABORTED,
   /** should not happen, file a bug */
   GIFSKI_OTHER,
 };
+
+/* workaround for a wrong definition in an older version of this header. Please use GIFSKI_ABORTED directly */
+#ifndef ABORTED
+#define ABORTED GIFSKI_ABORTED
+#endif
 
 typedef enum GifskiError GifskiError;
 
@@ -126,6 +131,22 @@ typedef enum GifskiError GifskiError;
  * Returns a handle for the other functions, or `NULL` on error (if the settings are invalid).
  */
 gifski *gifski_new(const GifskiSettings *settings);
+
+
+/** Quality 1-100 of temporal denoising. Lower values reduce motion. Defaults to `settings.quality`.
+ *
+ * Only valid immediately after calling `gifski_new`, before any frames are added. */
+GifskiError gifski_set_motion_quality(gifski *handle, uint8_t quality);
+
+/** Quality 1-100 of gifsicle compression. Lower values add noise. Defaults to `settings.quality`.
+ * Has no effect if the `gifsicle` feature hasn't been enabled.
+ * Only valid immediately after calling `gifski_new`, before any frames are added. */
+GifskiError gifski_set_lossy_quality(gifski *handle, uint8_t quality);
+
+/** If `true`, encoding will be significantly slower, but may look a bit better.
+ *
+ * Only valid immediately after calling `gifski_new`, before any frames are added. */
+GifskiError gifski_set_extra_effort(gifski *handle, bool extra);
 
 /**
  * Adds a frame to the animation. This function is asynchronous.
@@ -160,6 +181,8 @@ GifskiError gifski_add_frame_png_file(gifski *handle,
  * Presentation timestamp (PTS) is time in seconds, since start of the file, when this frame is to be displayed.
  * For a 20fps video it could be `frame_number/20.0`. First frame must have PTS=0.
  * Frames with duplicate or out-of-order PTS will be skipped.
+ *
+ * The first frame should have PTS=0. If the first frame has PTS > 0, it'll be used as a delay after the last frame.
  *
  * Colors are in sRGB, uncorrelated RGBA, with alpha byte last.
  *
@@ -233,6 +256,23 @@ GifskiError gifski_add_frame_rgb(gifski *handle,
 void gifski_set_progress_callback(gifski *handle, int (*progress_callback)(void *user_data), void *user_data);
 
 /**
+ * Get a callback when an error occurs.
+ * This is intended mostly for logging and debugging, not for user interface.
+ *
+ * The callback function has the following arguments:
+ *  * A `\0`-terminated C string in UTF-8 encoding. The string is only valid for the duration of the call. Make a copy if you need to keep it.
+ *  * An arbitrary pointer (`user_data`). `user_data` can be `NULL`.
+ *
+ * The callback must be thread-safe (it will be called from another thread).
+ * It must remain valid at all times, until `gifski_finish` completes.
+ *
+ * If the callback is not set, errors will be printed to stderr.
+ *
+ * This function must be called before `gifski_set_file_output()` to take effect.
+ */
+GifskiError gifski_set_error_message_callback(gifski *handle, void (*error_message_callback)(const char*, void*), void *user_data);
+
+/**
  * Start writing to the file at `destination_path` (overwrites if needed).
  * The file path must be ASCII or valid UTF-8.
  *
@@ -250,7 +290,7 @@ GifskiError gifski_set_file_output(gifski *handle, const char *destination_path)
  * The callback function receives 3 arguments:
  *  - size of the buffer to write, in bytes. IT MAY BE ZERO (when it's zero, either do nothing, or flush internal buffers if necessary).
  *  - pointer to the buffer.
- *  - context pointer to arbitary user data, same as passed in to this function.
+ *  - context pointer to arbitrary user data, same as passed in to this function.
  *
  * The callback should return 0 (`GIFSKI_OK`) on success, and non-zero on error.
  *
