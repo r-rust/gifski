@@ -2,11 +2,11 @@
 # mimics: source ~/.cargo/env
 export PATH="$HOME/.cargo/bin:$PATH"
 
-# Write 'cargo' to Makevars
-VERSION=$(cargo --version)
+# On Debian, cargo and rustc are sometimes different
+VERSION=$(rustc --version)
 if [ $? -eq 0 ]; then
   echo "Using `which cargo`"
-  echo "$VERSION"
+  echo "Rustc version: $VERSION"
 
   # Check for old version of rustc (edition:2021 requires rust 1.56)
   if [ "$(uname)" = "Linux" ]; then
