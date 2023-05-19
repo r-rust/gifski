@@ -1,6 +1,6 @@
 1.12.0
   - Update embedded libgifski to upstream 1.12.0
-  - Windows: if rust is available, default to source build of libgifski.
+  - Windows: if Cargo is available, default to source build of libgifski
 
 1.6.6-1
   - Fix for legacy Windows Vista/2008 (for the old winbuilder)

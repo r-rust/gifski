@@ -1,30 +1,15 @@
-TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
-LIBDIR = myrustlib/target/$(TARGET)/release
-STATLIB = $(LIBDIR)/libmyrustlib.a
-PKG_LIBS = -L$(LIBDIR) -lmyrustlib -lws2_32 -ladvapi32 -luserenv -ldbghelp -lbcrypt
+VERSION = 1.12.0
+RWINLIB = ../windows/gifski-winlibs
+PKG_CPPFLAGS = -I$(RWINLIB)/include
+GCC_VERSION = ${subst gcc,,${COMPILED_BY}}
+PKG_LIBS = -L$(RWINLIB)/lib$(GCC_VERSION)$(R_ARCH) \
+	-L$(RWINLIB)/lib$(R_ARCH) \
+	-lgifski -lws2_32 -ladvapi32 -luserenv -ldbghelp -lbcrypt
 
-# These can also be set in ~/.cargo/config
-ifeq ($(R_COMPILED_BY),gcc 8.3.0)
-GCCPATH=$(subst C:\,/c/,$(RTOOLS40_HOME))/mingw$(WIN)/bin
-export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER=$(RTOOLS40_HOME)\\mingw64\\bin\\gcc
-export CARGO_TARGET_I686_PC_WINDOWS_GNU_LINKER=$(RTOOLS40_HOME)\\\mingw32\\bin\\gcc
-else
-GCCPATH=$(subst C:\,/c/,$(RTOOLS43_HOME))/x86_64-w64-mingw32.static.posix/bin
-endif
+all: clean winlibs
 
-all: clean rustup
-
-$(SHLIB): $(STATLIB)
-
-$(STATLIB):
-ifeq ($(WIN),64) #hack for mxe-rtools42 missing -lgcc_eh
-	mkdir -p myrustlib/target/release/deps; echo '!<arch>' > myrustlib/target/release/deps/libgcc_eh.a
-endif
-	PATH="$(GCCPATH):$(USERPROFILE)\.cargo:$(PATH)" cargo build --target=$(TARGET) --release --manifest-path=myrustlib/Cargo.toml
-	rm -Rf $(LIBDIR)/build
+winlibs:
+	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" "../tools/winlibs.R" $(VERSION)
 
 clean:
-	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) myrustlib/target
-
-rustup:
-	rustup target add $(TARGET) || true
+	rm -f $(SHLIB) $(OBJECTS)

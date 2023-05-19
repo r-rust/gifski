@@ -10,16 +10,15 @@ jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }}${{ matrix.config.static }})
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }}) ${{ matrix.config.FORCE_STATIC_GIFSKI }}
 
     strategy:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-latest, r: '4.1', static: '-rwinlib'}
-          - {os: windows-latest, r: 'release', static: '-rwinlib'}
           - {os: windows-latest, r: '4.1'}
           - {os: windows-latest, r: 'release'}
+          - {os: windows-latest, r: 'release', FORCE_STATIC_GIFSKI: 'static'}
           - {os: macOS-latest, r: 'release'}
           - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
@@ -50,3 +49,5 @@ jobs:
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
+        env:
+          FORCE_STATIC_GIFSKI: ${{ matrix.config.FORCE_STATIC_GIFSKI }}

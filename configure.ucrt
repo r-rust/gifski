@@ -1,0 +1,9 @@
+#!/bin/sh
+export PATH="$HOME/.cargo/bin:$PATH"
+CARGO=$(which cargo)
+if [ $? -eq 0 ] && [ -z "${FORCE_STATIC_GIFSKI}" ]; then
+  echo "Building from source using ${CARGO} $(cargo --version)"
+  cp -f src/Makevars.win.build src/Makevars.win
+  exit 0
+fi
+exit 0
