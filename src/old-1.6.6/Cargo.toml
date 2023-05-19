@@ -1,0 +1,11 @@
+[package]
+name = "myrustlib"
+version = "0.1.0"
+authors = ["Jeroen <jeroenooms@gmail.com>"]
+edition = "2021"
+
+[lib]
+crate-type = ["staticlib"]
+
+[dependencies]
+gifski = "1.6.6"
