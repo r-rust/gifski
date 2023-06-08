@@ -1,7 +1,7 @@
 Package: gifski
 Type: Package
 Title: Highest Quality GIF Encoder
-Version: 1.12.0
+Version: 1.12.0-1
 Authors@R: c(
     person("Jeroen", "Ooms", ,"jeroen@berkeley.edu", role = c("aut", "cre"),
       comment = c(ORCID = "0000-0002-4035-0289")),
