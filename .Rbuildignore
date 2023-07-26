@@ -1,6 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^src/myrustlib/target
+^src/myrustlib/vendor/
 \.rs\.bk$
 ^readme.md$
 ^.travis.yml$
