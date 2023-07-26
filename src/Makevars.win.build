@@ -17,6 +17,7 @@ all: clean rustup
 $(SHLIB): $(STATLIB)
 
 $(STATLIB):
+	if [ -f myrustlib/vendor.tar.xz ]; then tar xf myrustlib/vendor.tar.xz && mkdir -p .cargo && cp myrustlib/vendor-config.toml .cargo/config.toml; fi
 	PATH="$(ADDPATH):$(PATH)" cargo build --target=$(TARGET) --release --manifest-path=myrustlib/Cargo.toml
 	rm -Rf $(LIBDIR)/build
 
