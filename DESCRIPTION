@@ -1,16 +1,18 @@
 Package: gifski
 Type: Package
 Title: Highest Quality GIF Encoder
-Version: 1.12.0-1
+Version: 1.12.0-2
 Authors@R: c(
     person("Jeroen", "Ooms", ,"jeroen@berkeley.edu", role = c("aut", "cre"),
       comment = c(ORCID = "0000-0002-4035-0289")),
-    person("Kornel Lesiński", role = "cph", comment = "Gifski Rust library"))
+    person("Kornel Lesiński", role = "cph", comment = "Gifski Rust library"),
+    person("Authors of the dependency Rust crates", role = "cph", 
+      comment = "see AUTHORS file"))
 Description: Multi-threaded GIF encoder written in Rust: <https://gif.ski/>. 
     Converts images to GIF animations using pngquant's efficient cross-frame 
     palettes and temporal dithering with thousands of colors per frame.
 License: MIT + file LICENSE
-URL: https://gif.ski/ (upstream), https://github.com/r-rust/gifski (devel)
+URL: https://r-rust.r-universe.dev/gifski
 BugReports: https://github.com/r-rust/gifski/issues
 SystemRequirements: Cargo (rustc package manager)
 Encoding: UTF-8
