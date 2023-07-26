@@ -14,7 +14,7 @@ Description: Multi-threaded GIF encoder written in Rust: <https://gif.ski/>.
 License: MIT + file LICENSE
 URL: https://r-rust.r-universe.dev/gifski
 BugReports: https://github.com/r-rust/gifski/issues
-SystemRequirements: Cargo (rustc package manager)
+SystemRequirements: Cargo (Rust's package manager), rustc
 Encoding: UTF-8
 RoxygenNote: 7.1.1
 Suggests:
