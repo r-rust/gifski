@@ -15,9 +15,11 @@ if [ $? -eq 0 ]; then
     MINOR=$(echo $VERNUM | cut -d'.' -f2) || true
     if [ "$MAJOR" -eq "1" ] && [ "$MINOR" -lt "56" ]; then
       echo "Found old rust. Using legacy gifski 1.4.3 build."
+      rm -f src/myrustlib/vendor.tar.xz
       cp -f src/old-1.4.3/* src/myrustlib/
     elif [ "$MAJOR" -eq "1" ] && [ "$MINOR" -lt "65" ]; then
       echo "Found old rust. Using legacy gifski 1.6.6 build."
+      rm -f src/myrustlib/vendor.tar.xz
       cp -f src/old-1.6.6/* src/myrustlib/
     fi
   fi
