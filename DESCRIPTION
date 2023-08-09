@@ -5,8 +5,8 @@ Version: 1.12.0-2
 Authors@R: c(
     person("Jeroen", "Ooms", ,"jeroen@berkeley.edu", role = c("aut", "cre"),
       comment = c(ORCID = "0000-0002-4035-0289")),
-    person("Kornel Lesiński", role = "cph", comment = "Gifski Rust library"),
-    person("Authors of the dependency Rust crates", role = "cph", 
+    person("Kornel Lesiński", role = "aut", comment = "Gifski Rust library"),
+    person("Authors of the dependency Rust crates", role = "aut", 
       comment = "see AUTHORS file"))
 Description: Multi-threaded GIF encoder written in Rust: <https://gif.ski/>. 
     Converts images to GIF animations using pngquant's efficient cross-frame 

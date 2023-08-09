@@ -8,10 +8,11 @@ $(SHLIB): $(STATLIB)
 
 # CRAN wants to avoid writing in $HOME
 export CARGO_HOME=$(PWD)/.cargo
+CRANFLAGS=-j 2
 
 $(STATLIB):
 	if [ -f myrustlib/vendor.tar.xz ]; then tar xf myrustlib/vendor.tar.xz && mkdir -p $(CARGO_HOME) && cp myrustlib/vendor-config.toml $(CARGO_HOME)/config.toml; fi
-	PATH="$(HOME)/.cargo/bin:$(PATH)" cargo build --release --manifest-path=myrustlib/Cargo.toml
+	PATH="$(HOME)/.cargo/bin:$(PATH)" cargo build ${CRANFLAGS} --release --manifest-path=myrustlib/Cargo.toml
 	rm -Rf $(CARGO_HOME) vendor || true
 	rm -Rf $(LIBDIR)/build || true
 

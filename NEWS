@@ -1,5 +1,7 @@
 1.12.0-2
   - Vendor rust code as requested by CRAN
+  - CRAN request: use role="aut" for rust dependencies
+  - CRAN request: use -j2 instead of CARGO_BUILD_JOBS=2
 
 1.12.0-1
   - Windows: add -lntdll linker flag required by Rust 1.70
