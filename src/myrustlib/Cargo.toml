@@ -8,4 +8,4 @@ edition = "2021"
 crate-type = ["staticlib"]
 
 [dependencies]
-gifski = "1.12.0"
+gifski = "1.12.2"
