@@ -17,6 +17,8 @@ jobs:
       matrix:
         config:
           - {os: windows-latest, r: '4.1'}
+          - {os: windows-latest, r: '4.2', FORCE_STATIC_GIFSKI: 'static''}
+          - {os: windows-latest, r: '4.2'}
           - {os: windows-latest, r: 'release'}
           - {os: windows-latest, r: 'release', FORCE_STATIC_GIFSKI: 'static'}
           - {os: macOS-latest, r: 'release'}

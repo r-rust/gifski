@@ -1,16 +1,18 @@
-# Build against gifski libs compiled with the Rtools
-VERSION <- commandArgs(TRUE)
-
-# Hack: latest gifski does not work on Windows Vista
-if(grepl('Windows (Vista|Server 2008)', osVersion)){
-  VERSION <- '1.4.3'
-}
-
-if(!file.exists(sprintf("../windows/gifski-%s/include/gifski.h", VERSION))){
-  if(getRversion() < "3.3.0") setInternet2()
-  download.file(sprintf("https://github.com/rwinlib/gifski/archive/v%s.zip", VERSION), "lib.zip", quiet = TRUE)
+if(!file.exists("../windows/libgifski/lib")){
+  unlink("../windows", recursive = TRUE)
+  url <- if(grepl("aarch", R.version$platform)){
+    "https://github.com/r-windows/bundles/releases/download/gifski-1.12.2/gifski-1.12.2-clang-aarch64.tar.xz"
+  } else if(grepl("clang", Sys.getenv('R_COMPILED_BY'))){
+    "https://github.com/r-windows/bundles/releases/download/gifski-1.12.2/gifski-1.12.2-clang-x86_64.tar.xz"
+  }  else if(getRversion() >= "4.2") {
+    "https://github.com/r-windows/bundles/releases/download/gifski-1.12.2/gifski-1.12.2-ucrt-x86_64.tar.xz"
+  } else {
+    "https://github.com/r-windows/bundles/releases/download/gifski-1.12.2/gifski-1.12.0-msvcrt.tar.xz"
+  }
+  download.file(url, basename(url), quiet = TRUE)
   dir.create("../windows", showWarnings = FALSE)
-  unzip("lib.zip", exdir = "../windows")
-  unlink("lib.zip")
-  file.rename(sprintf("../windows/gifski-%s", VERSION), '../windows/gifski-winlibs')
+  untar(basename(url), exdir = "../windows", tar = 'internal')
+  unlink(basename(url))
+  setwd("../windows")
+  file.rename(list.files(), 'libgifski')
 }
