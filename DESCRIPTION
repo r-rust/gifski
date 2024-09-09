@@ -3,7 +3,7 @@ Type: Package
 Title: Highest Quality GIF Encoder
 Version: 1.12.2
 Authors@R: c(
-    person("Jeroen", "Ooms", ,"jeroen@berkeley.edu", role = c("aut", "cre"),
+    person("Jeroen", "Ooms", ,"jeroenooms@gmail.com", role = c("aut", "cre"),
       comment = c(ORCID = "0000-0002-4035-0289")),
     person("Kornel Lesiński", role = "aut", comment = "Gifski Rust library"),
     person("Authors of the dependency Rust crates", role = "aut", 
