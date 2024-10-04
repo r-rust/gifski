@@ -3,6 +3,7 @@ export PATH="$HOME/.cargo/bin:$PATH"
 CARGO=$(which cargo)
 if [ $? -eq 0 ] && [ -z "${FORCE_STATIC_GIFSKI}" ]; then
   echo "Building from source using ${CARGO} $(cargo --version)"
+  rustc --version || true
 else
   rm -f src/Makevars.ucrt
 fi
