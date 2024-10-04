@@ -9,19 +9,17 @@ if [ $? -eq 0 ]; then
   echo "Rustc version: $VERSION"
 
   # Check for old version of rustc (edition:2021 requires rust 1.56)
-  if [ "$(uname)" = "Linux" ]; then
-    VERNUM=$(echo $VERSION | cut -d' ' -f2) || true
-    MAJOR=$(echo $VERNUM | cut -d'.' -f1) || true
-    MINOR=$(echo $VERNUM | cut -d'.' -f2) || true
-    if [ "$MAJOR" -eq "1" ] && [ "$MINOR" -lt "56" ]; then
-      echo "Found old rust. Using legacy gifski 1.4.3 build."
-      rm -f src/myrustlib/vendor.tar.xz
-      cp -f src/old-1.4.3/* src/myrustlib/
-    elif [ "$MAJOR" -eq "1" ] && [ "$MINOR" -lt "74" ]; then
-      echo "Found old rust. Using legacy gifski 1.6.6 build."
-      rm -f src/myrustlib/vendor.tar.xz
-      cp -f src/old-1.6.6/* src/myrustlib/
-    fi
+  VERNUM=$(echo $VERSION | cut -d' ' -f2) || true
+  MAJOR=$(echo $VERNUM | cut -d'.' -f1) || true
+  MINOR=$(echo $VERNUM | cut -d'.' -f2) || true
+  if [ "$MAJOR" -eq "1" ] && [ "$MINOR" -lt "56" ]; then
+    echo "Found old rust. Using legacy gifski 1.4.3 build."
+    rm -f src/myrustlib/vendor.tar.xz
+    cp -f src/old-1.4.3/* src/myrustlib/
+  elif [ "$MAJOR" -eq "1" ] && [ "$MINOR" -lt "74" ]; then
+    echo "Found old rust. Using legacy gifski 1.6.6 build."
+    rm -f src/myrustlib/vendor.tar.xz
+    cp -f src/old-1.6.6/* src/myrustlib/
   fi
   exit 0
 fi
