@@ -3,7 +3,7 @@ LIBDIR = myrustlib/target/$(TARGET)/release
 STATLIB = $(LIBDIR)/libmyrustlib.a
 PKG_LIBS = -L$(LIBDIR) -lmyrustlib -lws2_32 -ladvapi32 -luserenv -ldbghelp -lbcrypt -lntdll
 
-all: clean rustup
+all: clean
 
 $(SHLIB): $(STATLIB)
 
@@ -15,6 +15,3 @@ $(STATLIB):
 
 clean:
 	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) myrustlib/target
-
-rustup:
-	rustup target add $(TARGET) || true
