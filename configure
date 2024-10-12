@@ -20,6 +20,7 @@ if [ $? -eq 0 ]; then
     echo "Found old rust. Using legacy gifski 1.6.6 build."
     rm -f src/myrustlib/vendor.tar.xz
     cp -f src/old-1.6.6/* src/myrustlib/
+    ./cleanup || true
   fi
   exit 0
 fi
