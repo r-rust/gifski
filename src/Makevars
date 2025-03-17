@@ -3,7 +3,8 @@ STATLIB = $(LIBDIR)/libmyrustlib.a
 PKG_CFLAGS = -pthread $(C_VISIBILITY)
 PKG_LIBS = -L$(LIBDIR) -lmyrustlib -lresolv -pthread
 
-#all: clean
+all: $(SHLIB) cleanup
+
 $(SHLIB): $(STATLIB)
 
 # CRAN wants to avoid writing in $HOME
@@ -16,5 +17,5 @@ $(STATLIB):
 	rm -Rf $(CARGO_HOME) vendor || true
 	rm -Rf $(LIBDIR)/build || true
 
-clean:
-	rm -Rf $(SHLIB) $(STATLIB) $(OBJECTS) myrustlib/target
+cleanup: $(SHLIB)
+	rm -Rf $(STATLIB) myrustlib/target
