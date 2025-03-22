@@ -9,10 +9,12 @@ PKG_LIBS = -L$(RWINLIB)/lib \
 	-L$(RWINLIB)/lib$(R_ARCH) \
 	-lgifski -lws2_32 -ladvapi32 -luserenv -ldbghelp -lbcrypt $(NTDLL)
 
-all: clean winlibs
+all: $(SHLIB) cleanup
+
+$(OBJECTS): winlibs
 
 winlibs:
 	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" "../tools/winlibs.R"
 
-clean:
-	rm -f $(SHLIB) $(OBJECTS)
+cleanup: $(SHLIB)
+	@rm -Rf $(RWINLIB)
