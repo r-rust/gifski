@@ -1,7 +1,7 @@
 LIBDIR = myrustlib/target/release
 STATLIB = $(LIBDIR)/libmyrustlib.a
 PKG_CFLAGS = -pthread $(C_VISIBILITY)
-PKG_LIBS = -L$(LIBDIR) -lmyrustlib -lresolv -pthread
+PKG_LIBS = -L$(LIBDIR) -lmyrustlib
 
 all: $(SHLIB) cleanup
 
