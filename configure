@@ -2,6 +2,13 @@
 # mimics: source ~/.cargo/env
 export PATH="$HOME/.cargo/bin:$PATH"
 
+# Special case build for WebR
+if [ `uname` = "Emscripten" ]; then
+  rm -f src/myrustlib/vendor.tar.xz
+  cp -f src/dev-1.34.0/* src/myrustlib/
+  exit 0
+fi
+
 # On Debian, cargo and rustc are sometimes different
 VERSION=$(rustc --version)
 if [ $? -eq 0 ]; then

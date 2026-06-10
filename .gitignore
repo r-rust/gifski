@@ -12,3 +12,4 @@ src/.cargo
 src/myrustlib/vendor.tar.xz
 src/myrustlib/vendor/*
 inst/AUTHORS
+.positai

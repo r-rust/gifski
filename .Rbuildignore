@@ -11,3 +11,5 @@
 \.github$
 ^src/.cargo
 ^\.github$
+^\.positai$
+^\.claude$
